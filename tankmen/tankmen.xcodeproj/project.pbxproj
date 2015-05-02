@@ -10,34 +10,40 @@
 		A70355751AF5413200F2036C /* TNKContentNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70355741AF5413200F2036C /* TNKContentNavigationController.swift */; };
 		A70355781AF5429700F2036C /* TNKMainMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70355771AF5429700F2036C /* TNKMainMenuController.swift */; };
 		A703557B1AF542E000F2036C /* TNKGameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A703557A1AF542E000F2036C /* TNKGameController.swift */; };
+		A70355801AF550DD00F2036C /* UISwipeDirectionGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A703557F1AF550DD00F2036C /* UISwipeDirectionGestureRecognizer.swift */; };
+		A70355821AF5562600F2036C /* CGPointExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70355811AF5562600F2036C /* CGPointExtension.swift */; };
+		A70355841AF5789400F2036C /* V3D.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70355831AF5789400F2036C /* V3D.swift */; };
+		A70355871AF583C700F2036C /* Grid2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70355861AF583C700F2036C /* Grid2D.swift */; };
+		A703558B1AF5843C00F2036C /* Obj2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = A703558A1AF5843C00F2036C /* Obj2D.swift */; };
+		A703558D1AF584AD00F2036C /* Game2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = A703558C1AF584AD00F2036C /* Game2D.swift */; };
 		A708742D1AEEFBF700C299D5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A708742C1AEEFBF700C299D5 /* Images.xcassets */; };
-		A708743C1AEEFBF700C299D5 /* tankmenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A708743B1AEEFBF700C299D5 /* tankmenTests.swift */; };
 		A70874481AEEFE1300C299D5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70874461AEEFE1300C299D5 /* AppDelegate.swift */; };
 		A70874491AEEFE1300C299D5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70874471AEEFE1300C299D5 /* ViewController.swift */; };
+		A727D1541AF58C0C0060C562 /* data in Resources */ = {isa = PBXBuildFile; fileRef = A727D1531AF58C0C0060C562 /* data */; };
+		CC6C96C506D2B5755C8DDE20 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 498703DBE99034EDF0D43700 /* libPods.a */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		A70874361AEEFBF700C299D5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A70874181AEEFBF700C299D5 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A708741F1AEEFBF700C299D5;
-			remoteInfo = tankmen;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
+		498703DBE99034EDF0D43700 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		64E0C08E1B0CE1B3B2DD4C7D /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		A2EC7DEE21744323013C673A /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		A70355741AF5413200F2036C /* TNKContentNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TNKContentNavigationController.swift; sourceTree = "<group>"; };
 		A70355771AF5429700F2036C /* TNKMainMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TNKMainMenuController.swift; sourceTree = "<group>"; };
 		A703557A1AF542E000F2036C /* TNKGameController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TNKGameController.swift; sourceTree = "<group>"; };
+		A703557F1AF550DD00F2036C /* UISwipeDirectionGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UISwipeDirectionGestureRecognizer.swift; sourceTree = "<group>"; };
+		A70355811AF5562600F2036C /* CGPointExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGPointExtension.swift; sourceTree = "<group>"; };
+		A70355831AF5789400F2036C /* V3D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = V3D.swift; sourceTree = "<group>"; };
+		A70355861AF583C700F2036C /* Grid2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Grid2D.swift; sourceTree = "<group>"; };
+		A703558A1AF5843C00F2036C /* Obj2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Obj2D.swift; sourceTree = "<group>"; };
+		A703558C1AF584AD00F2036C /* Game2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game2D.swift; sourceTree = "<group>"; };
 		A70874201AEEFBF700C299D5 /* tankmen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = tankmen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A70874241AEEFBF700C299D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A708742C1AEEFBF700C299D5 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		A70874351AEEFBF700C299D5 /* tankmenTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = tankmenTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A708743A1AEEFBF700C299D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A708743B1AEEFBF700C299D5 /* tankmenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tankmenTests.swift; sourceTree = "<group>"; };
 		A70874461AEEFE1300C299D5 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A70874471AEEFE1300C299D5 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		A727D1531AF58C0C0060C562 /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = data; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,19 +51,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A70874321AEEFBF700C299D5 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				CC6C96C506D2B5755C8DDE20 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		18F76D1ACD84C9399A266FFB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				498703DBE99034EDF0D43700 /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		A70355731AF5413200F2036C /* main */ = {
 			isa = PBXGroup;
 			children = (
@@ -82,12 +90,36 @@
 			path = gameplay;
 			sourceTree = "<group>";
 		};
+		A703557E1AF550DD00F2036C /* code */ = {
+			isa = PBXGroup;
+			children = (
+				A703557F1AF550DD00F2036C /* UISwipeDirectionGestureRecognizer.swift */,
+				A70355811AF5562600F2036C /* CGPointExtension.swift */,
+				A70355831AF5789400F2036C /* V3D.swift */,
+			);
+			name = code;
+			path = source/code;
+			sourceTree = "<group>";
+		};
+		A70355851AF583C700F2036C /* game */ = {
+			isa = PBXGroup;
+			children = (
+				A703558C1AF584AD00F2036C /* Game2D.swift */,
+				A703558A1AF5843C00F2036C /* Obj2D.swift */,
+				A70355861AF583C700F2036C /* Grid2D.swift */,
+			);
+			name = game;
+			path = source/game;
+			sourceTree = "<group>";
+		};
 		A70874171AEEFBF700C299D5 = {
 			isa = PBXGroup;
 			children = (
 				A70874221AEEFBF700C299D5 /* tankmen */,
 				A70874381AEEFBF700C299D5 /* tankmenTests */,
 				A70874211AEEFBF700C299D5 /* Products */,
+				D0384B0F6EBEE46F8A906A27 /* Pods */,
+				18F76D1ACD84C9399A266FFB /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -95,7 +127,6 @@
 			isa = PBXGroup;
 			children = (
 				A70874201AEEFBF700C299D5 /* tankmen.app */,
-				A70874351AEEFBF700C299D5 /* tankmenTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -103,6 +134,7 @@
 		A70874221AEEFBF700C299D5 /* tankmen */ = {
 			isa = PBXGroup;
 			children = (
+				A727D1531AF58C0C0060C562 /* data */,
 				A708744A1AEEFE2300C299D5 /* source */,
 				A708742C1AEEFBF700C299D5 /* Images.xcassets */,
 				A70874231AEEFBF700C299D5 /* Supporting Files */,
@@ -151,9 +183,20 @@
 		A708744A1AEEFE2300C299D5 /* source */ = {
 			isa = PBXGroup;
 			children = (
+				A70355851AF583C700F2036C /* game */,
+				A703557E1AF550DD00F2036C /* code */,
 				A70874451AEEFE1300C299D5 /* display */,
 			);
 			name = source;
+			sourceTree = "<group>";
+		};
+		D0384B0F6EBEE46F8A906A27 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				64E0C08E1B0CE1B3B2DD4C7D /* Pods.debug.xcconfig */,
+				A2EC7DEE21744323013C673A /* Pods.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -163,9 +206,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A708743F1AEEFBF700C299D5 /* Build configuration list for PBXNativeTarget "tankmen" */;
 			buildPhases = (
+				C1A25E95B31D26F3D8307296 /* Check Pods Manifest.lock */,
 				A708741C1AEEFBF700C299D5 /* Sources */,
 				A708741D1AEEFBF700C299D5 /* Frameworks */,
 				A708741E1AEEFBF700C299D5 /* Resources */,
+				6FEF1C7ED64A34078A6708B0 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -175,24 +220,6 @@
 			productName = tankmen;
 			productReference = A70874201AEEFBF700C299D5 /* tankmen.app */;
 			productType = "com.apple.product-type.application";
-		};
-		A70874341AEEFBF700C299D5 /* tankmenTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A70874421AEEFBF700C299D5 /* Build configuration list for PBXNativeTarget "tankmenTests" */;
-			buildPhases = (
-				A70874311AEEFBF700C299D5 /* Sources */,
-				A70874321AEEFBF700C299D5 /* Frameworks */,
-				A70874331AEEFBF700C299D5 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				A70874371AEEFBF700C299D5 /* PBXTargetDependency */,
-			);
-			name = tankmenTests;
-			productName = tankmenTests;
-			productReference = A70874351AEEFBF700C299D5 /* tankmenTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -205,10 +232,6 @@
 				TargetAttributes = {
 					A708741F1AEEFBF700C299D5 = {
 						CreatedOnToolsVersion = 6.3.1;
-					};
-					A70874341AEEFBF700C299D5 = {
-						CreatedOnToolsVersion = 6.3.1;
-						TestTargetID = A708741F1AEEFBF700C299D5;
 					};
 				};
 			};
@@ -226,7 +249,6 @@
 			projectRoot = "";
 			targets = (
 				A708741F1AEEFBF700C299D5 /* tankmen */,
-				A70874341AEEFBF700C299D5 /* tankmenTests */,
 			);
 		};
 /* End PBXProject section */
@@ -236,49 +258,66 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A727D1541AF58C0C0060C562 /* data in Resources */,
 				A708742D1AEEFBF700C299D5 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A70874331AEEFBF700C299D5 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6FEF1C7ED64A34078A6708B0 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
 			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
-/* End PBXResourcesBuildPhase section */
+		C1A25E95B31D26F3D8307296 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		A708741C1AEEFBF700C299D5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A70355801AF550DD00F2036C /* UISwipeDirectionGestureRecognizer.swift in Sources */,
+				A703558D1AF584AD00F2036C /* Game2D.swift in Sources */,
+				A70355841AF5789400F2036C /* V3D.swift in Sources */,
 				A70355751AF5413200F2036C /* TNKContentNavigationController.swift in Sources */,
 				A70355781AF5429700F2036C /* TNKMainMenuController.swift in Sources */,
 				A70874491AEEFE1300C299D5 /* ViewController.swift in Sources */,
+				A703558B1AF5843C00F2036C /* Obj2D.swift in Sources */,
 				A70874481AEEFE1300C299D5 /* AppDelegate.swift in Sources */,
+				A70355871AF583C700F2036C /* Grid2D.swift in Sources */,
 				A703557B1AF542E000F2036C /* TNKGameController.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A70874311AEEFBF700C299D5 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A708743C1AEEFBF700C299D5 /* tankmenTests.swift in Sources */,
+				A70355821AF5562600F2036C /* CGPointExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		A70874371AEEFBF700C299D5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A708741F1AEEFBF700C299D5 /* tankmen */;
-			targetProxy = A70874361AEEFBF700C299D5 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		A708743D1AEEFBF700C299D5 /* Debug */ = {
@@ -366,59 +405,31 @@
 		};
 		A70874401AEEFBF700C299D5 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 64E0C08E1B0CE1B3B2DD4C7D /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = tankmen/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "5823e3a6-bba1-4d6b-820b-958d945be880";
 			};
 			name = Debug;
 		};
 		A70874411AEEFBF700C299D5 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A2EC7DEE21744323013C673A /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = tankmen/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		A70874431AEEFBF700C299D5 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = tankmenTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/tankmen.app/tankmen";
-			};
-			name = Debug;
-		};
-		A70874441AEEFBF700C299D5 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = tankmenTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/tankmen.app/tankmen";
+				PROVISIONING_PROFILE = "5823e3a6-bba1-4d6b-820b-958d945be880";
 			};
 			name = Release;
 		};
@@ -439,15 +450,6 @@
 			buildConfigurations = (
 				A70874401AEEFBF700C299D5 /* Debug */,
 				A70874411AEEFBF700C299D5 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		A70874421AEEFBF700C299D5 /* Build configuration list for PBXNativeTarget "tankmenTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A70874431AEEFBF700C299D5 /* Debug */,
-				A70874441AEEFBF700C299D5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

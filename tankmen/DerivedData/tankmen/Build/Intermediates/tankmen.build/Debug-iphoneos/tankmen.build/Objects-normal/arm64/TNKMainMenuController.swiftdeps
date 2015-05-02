@@ -1,0 +1,40 @@
+### Swift dependencies file v0 ###
+provides:
+- "TNKMainMenuController"
+nominals:
+- "C7tankmen21TNKMainMenuController"
+class-members:
+- "viewDidLoad"
+- "preferredStatusBarStyle"
+- "didReceiveMemoryWarning"
+- "prefersStatusBarHidden"
+top-level:
+- "Bool"
+- !private "StringLiteralType"
+- !private "UIColor"
+- !private "print"
+- "UIStatusBarStyle"
+- "UIViewController"
+- !private "BooleanLiteralType"
+member-access:
+- !private "OSC16UIStatusBarStyle"
+- !private "CSo7UIColor"
+- "C7tankmen21TNKMainMenuController"
+- "CSo8NSObject"
+- !private "CSo6UIView"
+- "CSo16UIViewController"
+- "CSo11UIResponder"
+- "PSs9AnyObject"
+dynamic-lookup:
+cross-module:
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos/Swift.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos/UIKit.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos/Foundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos/Darwin.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos/Dispatch.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos/ObjectiveC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos/CoreGraphics.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos/Security.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos/CoreImage.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos/SpriteKit.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos/GLKit.swiftmodule"

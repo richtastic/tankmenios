@@ -12,14 +12,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         window = UIWindow()
+        window?.makeKeyAndVisible()
+        window?.frame = UIScreen.mainScreen().bounds
+        
         
         //var controller = ViewController()
         var controller = TNKContentNavigationController()
         window?.rootViewController = controller
-        window?.makeKeyAndVisible()
+
         
         var mainMenu = TNKMainMenuController()
-        controller.pushViewController(mainMenu, animated:false);
+        controller.pushViewController(mainMenu, animated:false)
+        var gamePlay = TNKGameController()
+        controller.pushViewController(gamePlay, animated:true)
         
         return true
     }

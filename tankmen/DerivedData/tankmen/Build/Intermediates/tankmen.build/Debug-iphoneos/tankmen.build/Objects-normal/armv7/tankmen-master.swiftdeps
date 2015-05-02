@@ -1,8 +1,0 @@
-version: "Apple Swift version 1.2 (swiftlang-602.0.49.6 clang-602.0.49)"
-options: "c4edf4413b32c52e3138a655c0abc8a0"
-inputs: 
-- "/Users/zirbr001/dev/extRepos/tankmenios/tankmen/tankmen/source/display/main/TNKContentNavigationController.swift"
-- "/Users/zirbr001/dev/extRepos/tankmenios/tankmen/tankmen/source/display/menu/TNKMainMenuController.swift"
-- "/Users/zirbr001/dev/extRepos/tankmenios/tankmen/tankmen/source/display/ViewController.swift"
-- "/Users/zirbr001/dev/extRepos/tankmenios/tankmen/tankmen/source/display/AppDelegate.swift"
-- "/Users/zirbr001/dev/extRepos/tankmenios/tankmen/tankmen/source/display/gameplay/TNKGameController.swift"

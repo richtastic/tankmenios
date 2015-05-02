@@ -41,7 +41,11 @@ class TNKContentNavigationController: UINavigationController {
 //        super.didReceiveMemoryWarning()
 //        // Dispose of any resources that can be recreated.
 //    }
-
+    
+    override func shouldAutorotate() -> Bool {
+        return true
+    }
+    
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         //return UIStatusBarStyle.Default
         return UIStatusBarStyle.LightContent
