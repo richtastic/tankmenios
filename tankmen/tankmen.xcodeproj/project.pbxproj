@@ -20,6 +20,10 @@
 		A70874481AEEFE1300C299D5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70874461AEEFE1300C299D5 /* AppDelegate.swift */; };
 		A70874491AEEFE1300C299D5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70874471AEEFE1300C299D5 /* ViewController.swift */; };
 		A727D1541AF58C0C0060C562 /* data in Resources */ = {isa = PBXBuildFile; fileRef = A727D1531AF58C0C0060C562 /* data */; };
+		A727D1561AF5A67F0060C562 /* V2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = A727D1551AF5A67F0060C562 /* V2D.swift */; };
+		A727D1581AF5A86A0060C562 /* Cam2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = A727D1571AF5A86A0060C562 /* Cam2D.swift */; };
+		A727D15A1AF5A9400060C562 /* Block2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = A727D1591AF5A9400060C562 /* Block2D.swift */; };
+		A727D15C1AF5B6320060C562 /* Cell2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = A727D15B1AF5B6320060C562 /* Cell2D.swift */; };
 		CC6C96C506D2B5755C8DDE20 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 498703DBE99034EDF0D43700 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -44,6 +48,10 @@
 		A70874461AEEFE1300C299D5 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A70874471AEEFE1300C299D5 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		A727D1531AF58C0C0060C562 /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = data; sourceTree = "<group>"; };
+		A727D1551AF5A67F0060C562 /* V2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = V2D.swift; sourceTree = "<group>"; };
+		A727D1571AF5A86A0060C562 /* Cam2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cam2D.swift; sourceTree = "<group>"; };
+		A727D1591AF5A9400060C562 /* Block2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Block2D.swift; sourceTree = "<group>"; };
+		A727D15B1AF5B6320060C562 /* Cell2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cell2D.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +104,7 @@
 				A703557F1AF550DD00F2036C /* UISwipeDirectionGestureRecognizer.swift */,
 				A70355811AF5562600F2036C /* CGPointExtension.swift */,
 				A70355831AF5789400F2036C /* V3D.swift */,
+				A727D1551AF5A67F0060C562 /* V2D.swift */,
 			);
 			name = code;
 			path = source/code;
@@ -107,6 +116,9 @@
 				A703558C1AF584AD00F2036C /* Game2D.swift */,
 				A703558A1AF5843C00F2036C /* Obj2D.swift */,
 				A70355861AF583C700F2036C /* Grid2D.swift */,
+				A727D1571AF5A86A0060C562 /* Cam2D.swift */,
+				A727D1591AF5A9400060C562 /* Block2D.swift */,
+				A727D15B1AF5B6320060C562 /* Cell2D.swift */,
 			);
 			name = game;
 			path = source/game;
@@ -307,10 +319,14 @@
 				A703558D1AF584AD00F2036C /* Game2D.swift in Sources */,
 				A70355841AF5789400F2036C /* V3D.swift in Sources */,
 				A70355751AF5413200F2036C /* TNKContentNavigationController.swift in Sources */,
+				A727D1561AF5A67F0060C562 /* V2D.swift in Sources */,
+				A727D15A1AF5A9400060C562 /* Block2D.swift in Sources */,
+				A727D1581AF5A86A0060C562 /* Cam2D.swift in Sources */,
 				A70355781AF5429700F2036C /* TNKMainMenuController.swift in Sources */,
 				A70874491AEEFE1300C299D5 /* ViewController.swift in Sources */,
 				A703558B1AF5843C00F2036C /* Obj2D.swift in Sources */,
 				A70874481AEEFE1300C299D5 /* AppDelegate.swift in Sources */,
+				A727D15C1AF5B6320060C562 /* Cell2D.swift in Sources */,
 				A70355871AF583C700F2036C /* Grid2D.swift in Sources */,
 				A703557B1AF542E000F2036C /* TNKGameController.swift in Sources */,
 				A70355821AF5562600F2036C /* CGPointExtension.swift in Sources */,
