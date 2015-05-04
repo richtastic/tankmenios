@@ -1,8 +1,11 @@
 //  Block2D.swift
 
 import Foundation
+import SpriteKit
 
 class Block2D : Obj2D {
+    var display:SKNode!
+    
     var size:V2D!
     var end:V2D {
         get {

@@ -5,7 +5,7 @@ import UIKit
 class Obj2D : Printable {
     var pos:V2D! // position
     var vel:V2D! // velocity
-    var dir:V2D! // normal direction
+    var dir:V2D! // normal direction (rotation)
     
     var description:String {
         get {

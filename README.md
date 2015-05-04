@@ -30,6 +30,14 @@ _tbd:_
 - 
 
 
+### texture automation
+
+- from .swf?
+- rectangle packing
+- output to texture ?
+- 
+
+
 ### schedule
 
 | date | milestone | details |

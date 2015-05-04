@@ -7,6 +7,17 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
     static let Z_INDEX_BACKGROUND_DEFAULT:CGFloat = 1000
     static let Z_INDEX_MIDGROUND_DEFAULT:CGFloat = 2000
     static let Z_INDEX_FOREGROUND_DEFAULT:CGFloat = 3000
+    //
+    static let PHYSICS_CONTACT_BIT_MASK_ANY:UInt32 = 0xFFFFFFFF // contact to alert for
+    static let PHYSICS_CONTACT_BIT_MASK_CHAR:UInt32 = 0x1 << 0
+    static let PHYSICS_CONTACT_BIT_MASK_BLOK:UInt32 = 0x1 << 1
+    static let PHYSICS_CONTACT_BIT_MASK_ITEM:UInt32 = 0x1 << 2
+    static let PHYSICS_CONTACT_BIT_MASK_EFFX:UInt32 = 0x1 << 3
+    //
+    static let PHYSICS_CATEGORY_BIT_MASK_ANY:UInt32 = 0xFFFFFFFF // interaction
+    //
+    static let PHYSICS_COLLISION_BIT_MASK_ANY:UInt32 = 0xFFFFFFFF // bodies that can collide with THIS
+    
     // render
     private var viewUI:UIView!
     private var scene:SKScene! // .physics:SKPhysicsWorld!
@@ -23,6 +34,8 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
     // ?
     private var myImage:UIImage!
     private var altas:SKTextureAtlas!
+    //
+    private var selectedCharacter:SKNode! // AnyObject!
     
     override init() {
         super.init()
@@ -39,7 +52,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         view.backgroundColor = UIColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 0.5);
         // scene
         scene = SKScene()
-        scene.physicsWorld.contactDelegate = self
+//        scene.physicsWorld.contactDelegate = self
         scene.scaleMode = SKSceneScaleMode.ResizeFill
         scene.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 1.0, alpha: 0.5);
         view.presentScene(scene)
@@ -53,7 +66,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
     }
     func handleEventTiltXZ(notification:NSNotification) {
         var interval:Int = notification.object as! Int
-        println("titled XZ: \(interval)")
+//        println("titled XZ: \(interval)")
         if interval >= 4 {
             scene.physicsWorld.gravity = CGVectorMake(0, -1.0)
         } else {
@@ -62,11 +75,16 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
     }
     func handleEventTiltYZ(notification:NSNotification) {
         var interval:Int = notification.object as! Int
-        println("titled YZ: \(interval)")
+//        println("titled YZ: \(interval)")
     }
     func handleEventTap(notification:NSNotification) { //point:V2D!=nil) {
         var point:V2D! = notification.object as! V2D
         println("tapped: \(point)")
+        var dir:CGVector = CGVectorMake(5000.0, 500.0)
+        var body:SKPhysicsBody! = selectedCharacter.physicsBody
+        //println("body: \(body)")
+        //body.applyImpulse( dir )
+        body.applyForce( dir )
     }
     func handleEventSwipe(notification:NSNotification) {
         var tuple:[V2D] = notification.object as! [V2D]
@@ -158,6 +176,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
     func setPlay() {
         isPlaying = true
         scene.physicsWorld.speed = 1.0
+        scene.physicsWorld.contactDelegate = self
 //        scene.physicsWorld.
         input.play()
     }
@@ -172,7 +191,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         var physics:SKPhysicsWorld = scene.physicsWorld
         physics.gravity = CGVectorMake(0, -1.0)
 //        physics.speed = 1.0
-        physics.contactDelegate = self
+//        physics.contactDelegate = self
         //
         var scale:CGFloat = 1.0
         container = SKNode()
@@ -211,7 +230,9 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         println("textureStill0: \(textureStill0) ")
         
         // char
-        var character:SKSpriteNode = SKSpriteNode(texture:textureStill0)
+        //var character:SKSpriteNode = SKSpriteNode(texture:textureStill0)
+        var character:SKSpriteNode2D = SKSpriteNode2D()
+        character.texture = textureStill0
 //        character.anchorPoint = CGPoint(x:0, y:0)
 //        character.position = CGPoint(x:200.0, y:300.0)
         //character.size = CGSizeMake(100, 100);
@@ -222,6 +243,8 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
 //        action = SKAction.repeatActionForever(SKAction.animateWithTextures(textureAnimation, timePerFrame: 0.1, resize:false, restore:true))
 //        character.runAction(action);
         container.addChild(character)
+        
+selectedCharacter = character
         
         // physics
         var point:CGPoint!
@@ -235,7 +258,8 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         
         // surroundings
         rect = CGRectMake(0,0, 320, 400);
-        body = SKPhysicsBody(edgeLoopFromRect: rect)
+        body = SKPhysicsBody(edgeLoopFromRect: rect) ; body.contactTestBitMask = Game2D.PHYSICS_CONTACT_BIT_MASK_ANY
+        body.categoryBitMask = Game2D.PHYSICS_CATEGORY_BIT_MASK_ANY ; body.collisionBitMask = Game2D.PHYSICS_COLLISION_BIT_MASK_ANY
         node = SKNode()
         node.physicsBody = body
         container.addChild(node)
@@ -246,9 +270,12 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         character.position = CGPoint(x:200.0, y:300.0)
         character.anchorPoint = CGPoint(x:0, y:0)
         character.size = size
-        body = SKPhysicsBody(rectangleOfSize:size, center:center)
+        //body = SKPhysicsBody(rectangleOfSize:size, center:center) ; body.contactTestBitMask = Game2D.PHYSICS_CONTACT_BIT_MASK_ANY
+        body = SKPhysicsBody(rectangleOfSize:size, center:center) ; body.contactTestBitMask = Game2D.PHYSICS_CONTACT_BIT_MASK_ANY
+//        body.node = character
 //        body.allowsRotation = false
         character.physicsBody = body
+        character.name = "character"
         
         // object
         size = CGSizeMake(150, 100)
@@ -257,7 +284,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         sprite.position = CGPoint(x:100.0, y:100.0)
         sprite.anchorPoint = CGPoint(x:0, y:0)
         sprite.size = size
-        body = SKPhysicsBody(rectangleOfSize:size, center:center)
+        body = SKPhysicsBody(rectangleOfSize:size, center:center) ; body.contactTestBitMask = Game2D.PHYSICS_CONTACT_BIT_MASK_ANY
 //        body.allowsRotation = false
         body.friction = 0.1
         body.restitution = 0.9
@@ -275,7 +302,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         sprite.position = CGPoint(x:200.0, y:25.0)
         sprite.anchorPoint = CGPoint(x:0, y:0)
         sprite.size = size
-        body = SKPhysicsBody(rectangleOfSize:size, center:center)
+        body = SKPhysicsBody(rectangleOfSize:size, center:center) ; body.contactTestBitMask = Game2D.PHYSICS_CONTACT_BIT_MASK_ANY
         body.dynamic = false
         body.friction = 0.5
         body.restitution = 0.5
@@ -335,11 +362,26 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         */
     }
     
-    func didBeginContact(contact:SKPhysicsContact) {
-        println("contact: \(contact) ")
+    @objc func didBeginContact(contact:SKPhysicsContact) {
+        //println("contact Begin: \(contact) ")
         var bodyA:SKPhysicsBody = contact.bodyA
         var bodyB:SKPhysicsBody = contact.bodyB
         
+        if let a = bodyA.node as? SKSpriteNode2D {
+            println("a is 2D \(a)")
+        }
+        if let b = bodyB.node as? SKSpriteNode2D {
+            println("b is 2D \(b)")
+        }
+        
+        //if bodyA == selectedCharacter.physicsBody || bodyB == selectedCharacter.physicsBody {
+        if bodyA.node == selectedCharacter || bodyB.node == selectedCharacter {
+            // println("found: \(selectedCharacter)")
+        }
+        
+    }
+    @objc func didEndContact(contact:SKPhysicsContact) {
+        //println("contact End: \(contact) ")
     }
     func updateFrame(frame:CGRect) {
         view.frame = frame
