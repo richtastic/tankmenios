@@ -10,7 +10,7 @@ class Grid2D {
     
     init (width:Int=0, height:Int=0, sizeX:Double=100.0, sizeY:Double=100.0) {
         cells = NSMutableArray()
-        size = V2D(x:sizeX,y:sizeY)
+        size = V2D(sizeX,sizeY)
         setDimension(width:width, height:height)
     }
     deinit {

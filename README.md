@@ -26,6 +26,7 @@ _tbd:_
     - pinterest
     - instagram
     - tumbler
+    - newgrounds? (need API)
 - 
 
 
@@ -35,7 +36,7 @@ _tbd:_
 |:---- |:---------:|:-------:|
 | **04/28/15** | start concept art | - |
 | **05/01/15** | start iOS project | - |
-| _05/?/15_ | displaying graphics | TDB |
+| **05/03/15** | displaying graphics | - |
 | _05/?/15_ | controls | TDB |
 | _05/?/15_ | resource management | TDB |
 | _05/?/15_ | physics interaction | TDB |

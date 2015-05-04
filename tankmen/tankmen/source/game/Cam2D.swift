@@ -13,7 +13,7 @@ class Cam2D : Obj2D {
     
     init (posX:Double=0.0, posY:Double=0.0, velX:Double=0.0, velY:Double=0.0, dirX:Double=0.0, dirY:Double=0.0, scaleX:Double=0.0, scaleY:Double=0.0) {
         super.init(posX:posX, posY:posY, velX:velX, velY:velY, dirX:dirX, dirY:dirY)
-        scale = V2D(x:scaleX, y:scaleY)
+        scale = V2D(scaleX, scaleY)
     }
     deinit {
         //

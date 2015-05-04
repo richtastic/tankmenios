@@ -24,6 +24,12 @@
 		A727D1581AF5A86A0060C562 /* Cam2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = A727D1571AF5A86A0060C562 /* Cam2D.swift */; };
 		A727D15A1AF5A9400060C562 /* Block2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = A727D1591AF5A9400060C562 /* Block2D.swift */; };
 		A727D15C1AF5B6320060C562 /* Cell2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = A727D15B1AF5B6320060C562 /* Cell2D.swift */; };
+		A727D1641AF6B3F30060C562 /* Char2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = A727D1631AF6B3F30060C562 /* Char2D.swift */; };
+		A727D1661AF6B7730060C562 /* CharSequencer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A727D1651AF6B7730060C562 /* CharSequencer.swift */; };
+		A727D1681AF6B9210060C562 /* Resource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A727D1671AF6B9210060C562 /* Resource.swift */; };
+		A727D16A1AF6C82F0060C562 /* Input2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = A727D1691AF6C82F0060C562 /* Input2D.swift */; };
+		A727D16C1AF6C90A0060C562 /* Dispatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A727D16B1AF6C90A0060C562 /* Dispatch.swift */; };
+		A727D16E1AF6E0E90060C562 /* Code.swift in Sources */ = {isa = PBXBuildFile; fileRef = A727D16D1AF6E0E90060C562 /* Code.swift */; };
 		CC6C96C506D2B5755C8DDE20 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 498703DBE99034EDF0D43700 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -52,6 +58,12 @@
 		A727D1571AF5A86A0060C562 /* Cam2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cam2D.swift; sourceTree = "<group>"; };
 		A727D1591AF5A9400060C562 /* Block2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Block2D.swift; sourceTree = "<group>"; };
 		A727D15B1AF5B6320060C562 /* Cell2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cell2D.swift; sourceTree = "<group>"; };
+		A727D1631AF6B3F30060C562 /* Char2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Char2D.swift; sourceTree = "<group>"; };
+		A727D1651AF6B7730060C562 /* CharSequencer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CharSequencer.swift; sourceTree = "<group>"; };
+		A727D1671AF6B9210060C562 /* Resource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Resource.swift; sourceTree = "<group>"; };
+		A727D1691AF6C82F0060C562 /* Input2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Input2D.swift; sourceTree = "<group>"; };
+		A727D16B1AF6C90A0060C562 /* Dispatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dispatch.swift; sourceTree = "<group>"; };
+		A727D16D1AF6E0E90060C562 /* Code.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Code.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +117,8 @@
 				A70355811AF5562600F2036C /* CGPointExtension.swift */,
 				A70355831AF5789400F2036C /* V3D.swift */,
 				A727D1551AF5A67F0060C562 /* V2D.swift */,
+				A727D16B1AF6C90A0060C562 /* Dispatch.swift */,
+				A727D16D1AF6E0E90060C562 /* Code.swift */,
 			);
 			name = code;
 			path = source/code;
@@ -114,11 +128,15 @@
 			isa = PBXGroup;
 			children = (
 				A703558C1AF584AD00F2036C /* Game2D.swift */,
-				A703558A1AF5843C00F2036C /* Obj2D.swift */,
 				A70355861AF583C700F2036C /* Grid2D.swift */,
+				A727D15B1AF5B6320060C562 /* Cell2D.swift */,
+				A703558A1AF5843C00F2036C /* Obj2D.swift */,
 				A727D1571AF5A86A0060C562 /* Cam2D.swift */,
 				A727D1591AF5A9400060C562 /* Block2D.swift */,
-				A727D15B1AF5B6320060C562 /* Cell2D.swift */,
+				A727D1631AF6B3F30060C562 /* Char2D.swift */,
+				A727D1651AF6B7730060C562 /* CharSequencer.swift */,
+				A727D1691AF6C82F0060C562 /* Input2D.swift */,
+				A727D1671AF6B9210060C562 /* Resource.swift */,
 			);
 			name = game;
 			path = source/game;
@@ -318,18 +336,24 @@
 				A70355801AF550DD00F2036C /* UISwipeDirectionGestureRecognizer.swift in Sources */,
 				A703558D1AF584AD00F2036C /* Game2D.swift in Sources */,
 				A70355841AF5789400F2036C /* V3D.swift in Sources */,
+				A727D16A1AF6C82F0060C562 /* Input2D.swift in Sources */,
 				A70355751AF5413200F2036C /* TNKContentNavigationController.swift in Sources */,
 				A727D1561AF5A67F0060C562 /* V2D.swift in Sources */,
 				A727D15A1AF5A9400060C562 /* Block2D.swift in Sources */,
 				A727D1581AF5A86A0060C562 /* Cam2D.swift in Sources */,
 				A70355781AF5429700F2036C /* TNKMainMenuController.swift in Sources */,
 				A70874491AEEFE1300C299D5 /* ViewController.swift in Sources */,
+				A727D1681AF6B9210060C562 /* Resource.swift in Sources */,
 				A703558B1AF5843C00F2036C /* Obj2D.swift in Sources */,
 				A70874481AEEFE1300C299D5 /* AppDelegate.swift in Sources */,
+				A727D1641AF6B3F30060C562 /* Char2D.swift in Sources */,
 				A727D15C1AF5B6320060C562 /* Cell2D.swift in Sources */,
 				A70355871AF583C700F2036C /* Grid2D.swift in Sources */,
 				A703557B1AF542E000F2036C /* TNKGameController.swift in Sources */,
+				A727D16C1AF6C90A0060C562 /* Dispatch.swift in Sources */,
 				A70355821AF5562600F2036C /* CGPointExtension.swift in Sources */,
+				A727D16E1AF6E0E90060C562 /* Code.swift in Sources */,
+				A727D1661AF6B7730060C562 /* CharSequencer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

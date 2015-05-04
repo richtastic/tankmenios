@@ -14,9 +14,9 @@ class Obj2D : Printable {
     }
     
     init (posX:Double=0.0, posY:Double=0.0, velX:Double=0.0, velY:Double=0.0, dirX:Double=0.0, dirY:Double=0.0) {
-        pos = V2D(x:posX, y:posY)
-        vel = V2D(x:velX, y:velY)
-        dir = V2D(x:dirX, y:dirY)
+        pos = V2D(posX, posY)
+        vel = V2D(velX, velY)
+        dir = V2D(dirX, dirY)
     }
     deinit {
         //
