@@ -16,6 +16,17 @@ class TNKGameController: UIViewController {
 
         // game
         resetGame()
+        
+        /*
+        var label:UILabel = UILabel()
+        self.view.addSubview(label)
+        label.font = UIFont(name:ResourceTankmen.FNT_NAME_MONOSPICE, size:24)
+        label.text = "Hello There Monospice"
+        label.frame = self.view.frame
+        label.textColor = UIColor(red:1.0, green:0.0, blue: 0.0, alpha: 1.0)
+        label.textAlignment = NSTextAlignment.Center
+        */
+        
     }
     
     deinit {

@@ -22,6 +22,14 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>tankmen.ttf</string>
+		<string>monospice.ttf</string>
+		<string>Tankmen Title.ttf</string>
+		<string>Tekuteku.ttf</string>
+		<string>TekutekuPOCCNR.ttf</string>
+	</array>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
@@ -44,5 +52,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>tankmen.ttf</key>
+	<string></string>
 </dict>
 </plist>

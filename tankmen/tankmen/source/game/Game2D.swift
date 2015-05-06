@@ -26,18 +26,21 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
     // custom
     private var input:Input2D!
     private var isPlaying:Bool = false
+    private var currentTime:NSTimeInterval = 0
+    private var frameDeltaTime:NSTimeInterval = 1.0/60.0
     private var grid:Grid2D!
 //    private var
-    private var cams:NSMutableArray!
+    private var cams:[Cam2D]
     private var selectedCam:Int = -1
     private var resource:Resource!
     // ?
     private var myImage:UIImage!
     private var altas:SKTextureAtlas!
     //
-    private var selectedCharacter:SKNode! // AnyObject!
+    private var selectedCharacter:Char2D!
     
     override init() {
+        cams = [Cam2D]()
         super.init()
         
         // orientation management
@@ -56,22 +59,76 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         scene.scaleMode = SKSceneScaleMode.ResizeFill
         scene.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 1.0, alpha: 0.5);
         view.presentScene(scene)
+        //
+        
     }
     deinit {
         //
     }
     
     func handleEventEnterFrame() {
-        //println("EFF")
+        var cell:Cell2D
+        var cells:[Cell2D]
+        var char:Char2D
+        var chars:[Char2D]
+        var dyn:Obj2D
+        var dyns:[Obj2D]
+        var obj:Obj2D
+        var objs:[Obj2D]
+        var cam:Cam2D = cams[selectedCam]
+        //cell = grid.getCell(cam.pos.x,cam.pos.y)
+        cells = grid.getCellsAbout(cam.pos.x,cam.pos.y)
+        // process
+        for cell in cells {
+            //println(cell)
+            dyns = cell.dynamics
+            for dyn in dyns {
+                dyn.process(currentTime)
+                // possibly move cells ...
+            }
+            objs = cell.statics
+            for obj in objs {
+                obj.process(currentTime)
+                obj.render(currentTime, cam)
+            }
+            // ...
+        }
+        currentTime += frameDeltaTime //
+        // render
+        for cell in cells {
+            dyns = cell.dynamics
+            for dyn in dyns {
+                if dyn is Physics2D {
+                    (dyn as! Physics2D).updateFromDisplay()
+                }
+                dyn.render(currentTime, cam)
+            }
+            // ...
+            
+        }
+        
     }
     func handleEventTiltXZ(notification:NSNotification) {
         var interval:Int = notification.object as! Int
 //        println("titled XZ: \(interval)")
-        if interval >= 4 {
-            scene.physicsWorld.gravity = CGVectorMake(0, -1.0)
-        } else {
-            scene.physicsWorld.gravity = CGVectorMake(0, 1.0)
+        if selectedCharacter != nil {
+            //println("selectedCharacter: \(selectedCharacter)")
+            if 8 <= interval && interval <= 10 {
+                println("run")
+            } else if 7 <= interval && interval <= 7 {
+                println("walk")
+            } else { // 9,10,11,...,0,1,..
+                println("still")
+            }
+            // STAND
+            // WALK
+            // RUN
         }
+//        if interval >= 4 {
+//            scene.physicsWorld.gravity = CGVectorMake(0, -1.0)
+//        } else {
+//            scene.physicsWorld.gravity = CGVectorMake(0, 1.0)
+//        }
     }
     func handleEventTiltYZ(notification:NSNotification) {
         var interval:Int = notification.object as! Int
@@ -79,12 +136,20 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
     }
     func handleEventTap(notification:NSNotification) { //point:V2D!=nil) {
         var point:V2D! = notification.object as! V2D
-        println("tapped: \(point)")
-        var dir:CGVector = CGVectorMake(5000.0, 500.0)
-        var body:SKPhysicsBody! = selectedCharacter.physicsBody
-        //println("body: \(body)")
-        //body.applyImpulse( dir )
-        body.applyForce( dir )
+        //println("tapped: \(point)")
+        if selectedCharacter != nil {
+            // if point is in front - aim / shoot
+            // else if point is behind - jump
+            var dir:CGVector = CGVectorMake(50.0, 500.0)
+            var body:SKPhysicsBody! = selectedCharacter.display.physicsBody
+            println("body: \(body)")
+            body.applyImpulse( dir )
+            //body.applyForce( dir )
+        }
+// if behind character
+// JUMP
+// if in front of character
+// SHOOT
     }
     func handleEventSwipe(notification:NSNotification) {
         var tuple:[V2D] = notification.object as! [V2D]
@@ -154,17 +219,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         
         // .........................................
         defaultStuff()
-
-        grid = Grid2D(width:4, height:3, sizeX:100.0, sizeY:100.0)
-        cams = NSMutableArray()
         
-        var obj:Obj2D!
-        var cam:Cam2D!
-        
-        cam = Cam2D()
-        self.addCam(cam:cam)
-        
-        obj = Obj2D()
         // start
         setPlay()
     }
@@ -181,13 +236,24 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         input.play()
     }
     func addCam(cam:Cam2D!=nil) {
-        cams.addObject(cam)
+        cams.append(cam)
         if selectedCam < 0 {
             selectedCam = 0
         }
     }
     
     func defaultStuff() {
+        var obj:Obj2D!
+        var cam:Cam2D!
+        
+        cams.removeAll(keepCapacity:false)
+        cam = Cam2D()
+        self.addCam(cam:cam)
+        
+        grid = Grid2D(width:5, height:3, sizeX:100.0, sizeY:100.0)
+        
+        
+        
         var physics:SKPhysicsWorld = scene.physicsWorld
         physics.gravity = CGVectorMake(0, -1.0)
 //        physics.speed = 1.0
@@ -229,10 +295,23 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         textureStill0 = SKTexture(rect:rect, inTexture: textureAtlas.textureNamed("tankmen") )
         println("textureStill0: \(textureStill0) ")
         
+        // physics
+        var point:CGPoint!
+        var size:CGSize!
+        var center:CGPoint!
+        var radius:CGFloat
+        var node:SKNode!
+        var sprite:SKSpriteNode!
+        var s:SKSpriteNode!
+        var body:SKPhysicsBody!
+        
+        
         // char
+        /*
         //var character:SKSpriteNode = SKSpriteNode(texture:textureStill0)
         var character:SKSpriteNode2D = SKSpriteNode2D()
         character.texture = textureStill0
+        character.obj2D = Obj2D()
 //        character.anchorPoint = CGPoint(x:0, y:0)
 //        character.position = CGPoint(x:200.0, y:300.0)
         //character.size = CGSizeMake(100, 100);
@@ -244,18 +323,34 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
 //        character.runAction(action);
         container.addChild(character)
         
-selectedCharacter = character
+//selectedCharacter = character
+        */
+        // actual character
+        var char:Char2D!
+        char = Char2D()
+        body = char.bodyNodeFromPhysics()
+        node = char.displayNodeFromDisplay()
+        node.physicsBody = body
+            sprite = node as! SKSpriteNode
+            sprite.texture = textureStill0
+        char.attachDisplayNode(node)
         
-        // physics
-        var point:CGPoint!
-        var size:CGSize!
-        var center:CGPoint!
-        var radius:CGFloat
-        var node:SKNode!
-        var sprite:SKSpriteNode!
-        var s:SKSpriteNode!
-        var body:SKPhysicsBody!
+        container.addChild(node)
         
+        char.dir.set(1.0, 0.0)
+        
+        
+        var cell:Cell2D!
+        println("char: \(char)")
+        println("grid: \(grid)")
+        cell = grid.getCell(char.pos.x, char.pos.y)
+        cell.addDynamic(char)
+        
+        
+        selectedCharacter = char
+        
+
+
         // surroundings
         rect = CGRectMake(0,0, 320, 400);
         body = SKPhysicsBody(edgeLoopFromRect: rect) ; body.contactTestBitMask = Game2D.PHYSICS_CONTACT_BIT_MASK_ANY
@@ -263,7 +358,7 @@ selectedCharacter = character
         node = SKNode()
         node.physicsBody = body
         container.addChild(node)
- 
+ /*
         // character
         size = CGSizeMake(100, 100)
         center = CGPointMake(size.width*0.5,size.height*0.5)
@@ -321,7 +416,7 @@ selectedCharacter = character
         s.size = size
         s.alpha = 0.5
         sprite.addChild(s)
-        
+*/
         /*
 
         // rect
@@ -368,16 +463,16 @@ selectedCharacter = character
         var bodyB:SKPhysicsBody = contact.bodyB
         
         if let a = bodyA.node as? SKSpriteNode2D {
-            println("a is 2D \(a)")
+            println("a is 2D \(a.obj2D)")
         }
         if let b = bodyB.node as? SKSpriteNode2D {
-            println("b is 2D \(b)")
+            println("b is 2D \(b.obj2D)")
         }
         
         //if bodyA == selectedCharacter.physicsBody || bodyB == selectedCharacter.physicsBody {
-        if bodyA.node == selectedCharacter || bodyB.node == selectedCharacter {
-            // println("found: \(selectedCharacter)")
-        }
+//        if bodyA.node == selectedCharacter || bodyB.node == selectedCharacter {
+//            // println("found: \(selectedCharacter)")
+//        }
         
     }
     @objc func didEndContact(contact:SKPhysicsContact) {

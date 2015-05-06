@@ -22,7 +22,7 @@ class Obj2D : Printable {
         //
     }
     
-    func render(time:NSTimeInterval) {
+    func render(time:NSTimeInterval, _ cam:Cam2D) {
         //
     }
     func process(time:NSTimeInterval){

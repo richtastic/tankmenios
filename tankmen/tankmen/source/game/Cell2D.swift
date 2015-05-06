@@ -4,12 +4,14 @@ import Foundation
 
 class Cell2D : Block2D{
     // scenery
-    var background:NSMutableArray! // behind all
-    var foreground:NSMutableArray! // front of all
+    var backgrounds:[Obj2D]! // behind all
+    var foregrounds:[Obj2D]! // front of all
     // physics
     //var characters:NSMutableArray! // behavior
-    var dynamics:NSMutableArray! // moving physics
-    var statics:NSMutableArray! // static physics
+    var dynamics:[Obj2D]! // moving physics
+    var statics:[Obj2D]! // static physics
+    var events:[Obj2D]! // event objects
+    
     // neighbors
         // dynamic?
     override var description:String {
@@ -20,54 +22,59 @@ class Cell2D : Block2D{
     }
     override init (posX:Double=0.0, posY:Double=0.0, velX:Double=0.0, velY:Double=0.0, dirX:Double=0.0, dirY:Double=0.0, sizeX:Double=0.0, sizeY:Double=0.0) {
         super.init(posX:posX, posY:posY, velX:velX, velY:velY, dirX:dirX, dirY:dirY)
-        background = NSMutableArray()
-        foreground = NSMutableArray()
-        statics = NSMutableArray()
-        dynamics = NSMutableArray()
+        backgrounds = [Obj2D]()
+        foregrounds = [Obj2D]()
+        statics = [Obj2D]()
+        dynamics = [Obj2D]()
+        events = [Obj2D]()
     }
     func addBackground(obj:Obj2D) -> Obj2D {
-        if !background.containsObject(obj) {
-            background.addObject(obj)
+        if !Code.elementExists(&backgrounds!, obj) {
+            backgrounds.append(obj)
         }
+        backgrounds.append(obj)
         return obj
     }
     func addForeground(obj:Obj2D) -> Obj2D {
-        foreground.addObject(obj)
+        if !Code.elementExists(&foregrounds!, obj) {
+            foregrounds.append(obj)
+        }
         return obj
     }
-    func addDynamics(obj:Obj2D) -> Obj2D {
-        dynamics.addObject(obj)
+    func addDynamic(obj:Obj2D) -> Obj2D {
+        if !Code.elementExists(&dynamics!, obj) {
+            dynamics.append(obj)
+        }
         return obj
     }
-    func addStatics(obj:Obj2D) -> Obj2D {
-        statics.addObject(obj)
+    func addStatic(obj:Obj2D) -> Obj2D {
+        statics.append(obj)
+        return obj
+    }
+    func addEvent(obj:Obj2D) -> Obj2D {
+        statics.append(obj)
         return obj
     }
     func removeBackground(obj:Obj2D) -> Obj2D {
-        if background.containsObject(obj) {
-            background.removeObject(obj)
-        }
+        Code.removeElementIfExists(&backgrounds!, obj)
         return obj
     }
     func removeForeground(obj:Obj2D) -> Obj2D {
-        if foreground.containsObject(obj) {
-            foreground.removeObject(obj)
-        }
+        Code.removeElementIfExists(&foregrounds!, obj)
         return obj
     }
-    func removeStatics(obj:Obj2D) -> Obj2D {
-        if statics.containsObject(obj) {
-            statics.removeObject(obj)
-        }
+    func removeStatic(obj:Obj2D) -> Obj2D {
+        Code.removeElementIfExists(&statics!, obj)
         return obj
     }
-    func removeDynamics(obj:Obj2D) -> Obj2D {
-        if dynamics.containsObject(obj) {
-            dynamics.removeObject(obj)
-        }
+    func removeDynamic(obj:Obj2D) -> Obj2D {
+        Code.removeElementIfExists(&dynamics!, obj)
         return obj
     }
-    
+    func removeEvent(obj:Obj2D) -> Obj2D {
+        Code.removeElementIfExists(&dynamics!, obj)
+        return obj
+    }
     deinit {
         size = nil
     }

@@ -22,8 +22,21 @@ class Block2D : Obj2D {
         super.init(posX:posX, posY:posY, velX:velX, velY:velY, dirX:dirX, dirY:dirY)
         size = V2D(sizeX, sizeY)
     }
-    
     deinit {
         size = nil
     }
+    
+    func attachDisplayNode(node:SKNode) {
+        display = node
+        if node is SKObj2D {
+            var node2D:SKObj2D = node as! SKObj2D
+            node2D.obj2D = self
+        }
+    }
+    func displayNodeFromDisplay() -> SKNode! {
+        var node:SKNode!
+        node = SKNode()
+        return node
+    }
+    
 }
