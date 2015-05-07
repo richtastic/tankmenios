@@ -39,6 +39,7 @@
 		A73224631AF83C43003A10FC /* Tekuteku.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A732245E1AF83C43003A10FC /* Tekuteku.ttf */; };
 		A73224641AF83C43003A10FC /* TekutekuPOCCNR.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A732245F1AF83C43003A10FC /* TekutekuPOCCNR.ttf */; };
 		A73224671AF83DFE003A10FC /* ResourceTankmen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A73224661AF83DFE003A10FC /* ResourceTankmen.swift */; };
+		A7892F331AFB3DCA0062F606 /* SKScene2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7892F321AFB3DCA0062F606 /* SKScene2D.swift */; };
 		A7B8EFED1AF9DB2D003F48A1 /* SKObj2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B8EFEC1AF9DB2D003F48A1 /* SKObj2D.swift */; };
 		A7B8EFEF1AF9DC2F003F48A1 /* SKNode2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B8EFEE1AF9DC2F003F48A1 /* SKNode2D.swift */; };
 		CC6C96C506D2B5755C8DDE20 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 498703DBE99034EDF0D43700 /* libPods.a */; };
@@ -84,6 +85,7 @@
 		A732245E1AF83C43003A10FC /* Tekuteku.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Tekuteku.ttf; sourceTree = "<group>"; };
 		A732245F1AF83C43003A10FC /* TekutekuPOCCNR.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = TekutekuPOCCNR.ttf; sourceTree = "<group>"; };
 		A73224661AF83DFE003A10FC /* ResourceTankmen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResourceTankmen.swift; sourceTree = "<group>"; };
+		A7892F321AFB3DCA0062F606 /* SKScene2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKScene2D.swift; sourceTree = "<group>"; };
 		A7B8EFEC1AF9DB2D003F48A1 /* SKObj2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKObj2D.swift; sourceTree = "<group>"; };
 		A7B8EFEE1AF9DC2F003F48A1 /* SKNode2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKNode2D.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -164,6 +166,7 @@
 				A727D1731AF72A340060C562 /* SKSpriteNode2D.swift */,
 				A7B8EFEC1AF9DB2D003F48A1 /* SKObj2D.swift */,
 				A7B8EFEE1AF9DC2F003F48A1 /* SKNode2D.swift */,
+				A7892F321AFB3DCA0062F606 /* SKScene2D.swift */,
 			);
 			name = game;
 			path = source/game;
@@ -408,6 +411,7 @@
 				A703558B1AF5843C00F2036C /* Obj2D.swift in Sources */,
 				A70874481AEEFE1300C299D5 /* AppDelegate.swift in Sources */,
 				A727D1641AF6B3F30060C562 /* Char2D.swift in Sources */,
+				A7892F331AFB3DCA0062F606 /* SKScene2D.swift in Sources */,
 				A727D15C1AF5B6320060C562 /* Cell2D.swift in Sources */,
 				A70355871AF583C700F2036C /* Grid2D.swift in Sources */,
 				A703557B1AF542E000F2036C /* TNKGameController.swift in Sources */,

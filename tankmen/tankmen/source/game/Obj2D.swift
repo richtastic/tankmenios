@@ -1,6 +1,7 @@
 //  Obj2D.swift
 
 import UIKit
+import SpriteKit
 
 class Obj2D : Printable {
     var pos:V2D! // position
@@ -22,10 +23,17 @@ class Obj2D : Printable {
         //
     }
     
-    func render(time:NSTimeInterval, _ cam:Cam2D) {
+    func render(time:NSTimeInterval, _ cam:Cam2D, _ gravity:V2D) {
         //
     }
-    func process(time:NSTimeInterval){
+    func process(time:NSTimeInterval, _ physics:SKPhysicsWorld){
+        //
+    }
+    
+    func handleCollisionStart(gravity:V2D!, _ normal:V2D!, _ obj:Obj2D!) {
+        //
+    }
+    func handleCollisionEnd(gravity:V2D!, _ normal:V2D!, _ obj:Obj2D!) {
         //
     }
 }

@@ -8,18 +8,30 @@ import QuartzCore
 class Input2D { //: NSObject {
     static let EVENT_LOOP:String = "EVENT_LOOP"
     static let EVENT_INTERACT_TAP:String = "EVENT_INTERACT_TAP"
+    static let EVENT_INTERACT_DOUBLE_TAP:String = "EVENT_INTERACT_DOUBLE_TAP"
+    static let EVENT_INTERACT_PRESS:String = "EVENT_INTERACT_PRESS"
     static let EVENT_INTERACT_SWIPE:String = "EVENT_INTERACT_SWIPE"
     static let EVENT_INTERACT_TILT_XZ:String = "EVENT_INTERACT_TILT_XZ"
     static let EVENT_INTERACT_TILT_YZ:String = "EVENT_INTERACT_TILT_YZ"
-    var motionManager:CMMotionManager!
-    var tiltZYIntervals:NSMutableArray!
+    private var motionManager:CMMotionManager!
+    private var tiltZYIntervals:NSMutableArray!
     var dispatch:NSNotificationCenter!
-    var timer:NSTimer!
-    var frameRate:NSTimeInterval = 1.0
+    private var timer:NSTimer!
+    private var _frameRate:NSTimeInterval = 1.0
+    var frameRate:NSTimeInterval {
+        get {
+            return _frameRate
+        }
+        set {
+            _frameRate = newValue
+        }
+    }
     var isPlaying:Bool = false
     //
-    var gestureTap:UITapGestureRecognizer!
-    var gestureSwipe:UISwipeDirectionGestureRecognizer!
+    private var gestureTap:UITapGestureRecognizer!
+    private var gestureDouble:UITapGestureRecognizer!
+    private var gesturePress:UILongPressGestureRecognizer!
+    private var gestureSwipe:UISwipeDirectionGestureRecognizer!
     // XZ tilt
     private var currentIntervalXZ:Int = 0
     private var totalIntervalsXZ:Int = 12 // 360/12 = 30 degrees
@@ -39,16 +51,19 @@ class Input2D { //: NSObject {
         }
     }
     init () {
-    //override init () {
-        //super.init ()
         resetMotionManager()
         dispatch = NSNotificationCenter()
         tiltZYIntervals = NSMutableArray()
-//        var intervals:Int = 360/12
-        
         // gesture management
+        gestureDouble = UITapGestureRecognizer()
+        gestureDouble.addTarget(self, action: "handleGestureRecognizerDouble:")
+        gestureDouble.numberOfTapsRequired = 2
         gestureTap = UITapGestureRecognizer()
         gestureTap.addTarget(self, action: "handleGestureRecognizerTap:")
+        //gestureTap.requireGestureRecognizerToFail(gestureDouble)
+        gesturePress = UILongPressGestureRecognizer()
+        gesturePress.addTarget(self, action: "handleGestureRecognizerPress:")
+        gesturePress.minimumPressDuration = 0.5
         gestureSwipe = UISwipeDirectionGestureRecognizer()
         gestureSwipe.addTarget(self, action: "handleGestureRecognizerSwipe:")
         gestureSwipe.distanceMinimum = 50.0
@@ -58,10 +73,13 @@ class Input2D { //: NSObject {
         stopMotionManager()
         stopTimer()
         removeGestures()
+        // dispatch ?
     }
 // ----------------------------------------------------------------------------------------------------------------------------------------
     func setFrom(view:UIView) {
         view.addGestureRecognizer(gestureTap)
+        view.addGestureRecognizer(gestureDouble)
+        view.addGestureRecognizer(gesturePress)
         view.addGestureRecognizer(gestureSwipe)
     }
     func play() {
@@ -70,7 +88,7 @@ class Input2D { //: NSObject {
             isPlaying = true
         }
     }
-    func stop(){
+    func stop() {
         if isPlaying {
             stopTimer()
             isPlaying = false
@@ -85,12 +103,20 @@ class Input2D { //: NSObject {
             gestureTap.view?.removeGestureRecognizer(gestureTap)
             gestureTap = nil
         }
+        if gestureDouble != nil {
+            gestureDouble.view?.removeGestureRecognizer(gestureDouble)
+            gestureDouble = nil
+        }
+        if gesturePress != nil {
+            gesturePress.view?.removeGestureRecognizer(gesturePress)
+            gesturePress = nil
+        }
     }
 // ----------------------------------------------------------------------------------------------------------------------------------------
     func startTimer() {
         stopTimer()
         var loop:NSRunLoop = NSRunLoop.mainRunLoop()
-        var interval:NSTimeInterval = frameRate
+        var interval:NSTimeInterval = _frameRate
         //timer = NSTimer(timeInterval: interval, target:self, selector:"timerTrigger:", userInfo:nil, repeats: false)
         //loop.addTimer(timer, forMode:NSDefaultRunLoopMode)
         //loop.addTimer(timer, forMode:NSRunLoopCommonModes)
@@ -103,7 +129,6 @@ class Input2D { //: NSObject {
         }
     }
     @objc func timerTrigger(timer:NSTimer!) {
-        //println("enter frame")
         alertAll(Input2D.EVENT_LOOP)
         if isPlaying {
             startTimer()
@@ -125,9 +150,9 @@ class Input2D { //: NSObject {
         stopMotionManager()
         motionManager = CMMotionManager()
         motionManager.deviceMotionUpdateInterval = 0.10
-        println("ACCELERATION: "+(motionManager.accelerometerAvailable ? "YES" : "NO")+" ")
-        println("MAGNETOMETER: "+(motionManager.magnetometerAvailable ? "YES" : "NO")+" ")
-        println("   GYROSCOPE: "+(motionManager.gyroAvailable ? "YES" : "NO")+" ")
+//        println("ACCELERATION: "+(motionManager.accelerometerAvailable ? "YES" : "NO")+" ")
+//        println("MAGNETOMETER: "+(motionManager.magnetometerAvailable ? "YES" : "NO")+" ")
+//        println("   GYROSCOPE: "+(motionManager.gyroAvailable ? "YES" : "NO")+" ")
         //        motionManager.startDeviceMotionUpdatesToQueue(NSOperationQueue.mainQueue(), withHandler:{
         //            (data: CMAccelerometerData!, error: NSError!) in
         //            println("X = \(data.acceleration.x)")
@@ -249,20 +274,30 @@ class Input2D { //: NSObject {
     
     @objc func handleGestureRecognizerTap(recognizer:UITapGestureRecognizer) {
         var pt:CGPoint = recognizer.locationInView(recognizer.view)
-        var point:V2D = V2D(Double(pt.x),Double(pt.y))
+        var point:V2D = V2D(pt)
         alertAll(Input2D.EVENT_INTERACT_TAP, object:point)
     }
-    
+    @objc func handleGestureRecognizerDouble(recognizer:UITapGestureRecognizer) {
+        var pt:CGPoint = recognizer.locationInView(recognizer.view)
+        var point:V2D = V2D(pt)
+        alertAll(Input2D.EVENT_INTERACT_DOUBLE_TAP, object:point)
+    }
+    @objc func handleGestureRecognizerPress(recognizer:UILongPressGestureRecognizer) {
+        if recognizer.state == UIGestureRecognizerState.Ended {
+            var pt:CGPoint = recognizer.locationInView(recognizer.view)
+            var point:V2D = V2D(pt)
+            alertAll(Input2D.EVENT_INTERACT_PRESS, object:point)
+        }
+    }
     @objc func handleGestureRecognizerSwipe(recognizer:UISwipeDirectionGestureRecognizer) {
         var view:UIView! = recognizer.view
         var direction:CGPoint = recognizer.swipeDirection
         var location:CGPoint = recognizer.swipeLocation
         
-        var loc:V2D = V2D(Double(location.x), Double(location.y))
-        var dir:V2D = V2D(Double(direction.x),Double(direction.y))
-        //var tuple = (location:loc, direction:dir)
-        var tuple:[V2D] = [loc, dir]
-        alertAll(Input2D.EVENT_INTERACT_SWIPE, object:tuple)
+        var loc:V2D = V2D(location)
+        var dir:V2D = V2D(direction)
+        var list:[V2D] = [loc, dir]
+        alertAll(Input2D.EVENT_INTERACT_SWIPE, object:list)
     }
     // --------------------------------------------------------------------------------------------------------------------------------------
 

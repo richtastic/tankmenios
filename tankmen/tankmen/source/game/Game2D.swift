@@ -17,17 +17,18 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
     static let PHYSICS_CATEGORY_BIT_MASK_ANY:UInt32 = 0xFFFFFFFF // interaction
     //
     static let PHYSICS_COLLISION_BIT_MASK_ANY:UInt32 = 0xFFFFFFFF // bodies that can collide with THIS
-    
+    //
+    static let FRAME_RATE_DEFAULT:NSTimeInterval = 0.02 // 50 fps
     // render
     private var viewUI:UIView!
-    private var scene:SKScene! // .physics:SKPhysicsWorld!
+    private var scene:SKScene2D! // .physics:SKPhysicsWorld!
     private var view:SKView!
     private var container:SKNode!
     // custom
     private var input:Input2D!
     private var isPlaying:Bool = false
     private var currentTime:NSTimeInterval = 0
-    private var frameDeltaTime:NSTimeInterval = 1.0/60.0
+    private var frameDeltaTime:NSTimeInterval = 1.0/30.0
     private var grid:Grid2D!
 //    private var
     private var cams:[Cam2D]
@@ -49,12 +50,16 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         input.dispatch.addObserver(self, selector:"handleEventTiltXZ:", name:Input2D.EVENT_INTERACT_TILT_XZ, object:nil)
         input.dispatch.addObserver(self, selector:"handleEventTiltYZ:", name:Input2D.EVENT_INTERACT_TILT_YZ, object:nil)
         input.dispatch.addObserver(self, selector:"handleEventTap:", name:Input2D.EVENT_INTERACT_TAP, object:nil)
+        input.dispatch.addObserver(self, selector:"handleEventDoubleTap:", name:Input2D.EVENT_INTERACT_DOUBLE_TAP, object:nil)
+        input.dispatch.addObserver(self, selector:"handleEventPress:", name:Input2D.EVENT_INTERACT_PRESS, object:nil)
         input.dispatch.addObserver(self, selector:"handleEventSwipe:", name:Input2D.EVENT_INTERACT_SWIPE, object:nil)
+        input.frameRate = Game2D.FRAME_RATE_DEFAULT
         // view
         view = SKView()
         view.backgroundColor = UIColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 0.5);
         // scene
-        scene = SKScene()
+        scene = SKScene2D()
+        scene.dispatch.addObserver(self, selector:"handleEventSceneUpdateFinish:", name:SKScene2D.EVENT_UPDATE_FINISH, object:nil)
 //        scene.physicsWorld.contactDelegate = self
         scene.scaleMode = SKSceneScaleMode.ResizeFill
         scene.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 1.0, alpha: 0.5);
@@ -67,6 +72,13 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
     }
     
     func handleEventEnterFrame() {
+        //
+    }
+    func handleEventSceneUpdateFinish(notification:NSNotification) {
+        var interval:NSTimeInterval = notification.object as! NSTimeInterval
+        processAndRender()
+    }
+    func processAndRender() {
         var cell:Cell2D
         var cells:[Cell2D]
         var char:Char2D
@@ -76,6 +88,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         var obj:Obj2D
         var objs:[Obj2D]
         var cam:Cam2D = cams[selectedCam]
+        var gravity:V2D = getGravity()
         //cell = grid.getCell(cam.pos.x,cam.pos.y)
         cells = grid.getCellsAbout(cam.pos.x,cam.pos.y)
         // process
@@ -83,13 +96,12 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
             //println(cell)
             dyns = cell.dynamics
             for dyn in dyns {
-                dyn.process(currentTime)
+                dyn.process(currentTime, scene.physicsWorld)
                 // possibly move cells ...
             }
             objs = cell.statics
             for obj in objs {
-                obj.process(currentTime)
-                obj.render(currentTime, cam)
+                obj.process(currentTime, scene.physicsWorld)
             }
             // ...
         }
@@ -98,65 +110,62 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         for cell in cells {
             dyns = cell.dynamics
             for dyn in dyns {
-                if dyn is Physics2D {
-                    (dyn as! Physics2D).updateFromDisplay()
-                }
-                dyn.render(currentTime, cam)
+                dyn.render(currentTime, cam, gravity)
+            }
+            objs = cell.statics
+            for obj in objs {
+                obj.render(currentTime, cam, gravity)
             }
             // ...
             
         }
-        
+
     }
     func handleEventTiltXZ(notification:NSNotification) {
         var interval:Int = notification.object as! Int
 //        println("titled XZ: \(interval)")
         if selectedCharacter != nil {
-            //println("selectedCharacter: \(selectedCharacter)")
             if 8 <= interval && interval <= 10 {
-                println("run")
+                selectedCharacter.run()
             } else if 7 <= interval && interval <= 7 {
-                println("walk")
+                selectedCharacter.walk()
             } else { // 9,10,11,...,0,1,..
-                println("still")
+                selectedCharacter.still()
             }
-            // STAND
-            // WALK
-            // RUN
         }
-//        if interval >= 4 {
-//            scene.physicsWorld.gravity = CGVectorMake(0, -1.0)
-//        } else {
-//            scene.physicsWorld.gravity = CGVectorMake(0, 1.0)
-//        }
     }
     func handleEventTiltYZ(notification:NSNotification) {
         var interval:Int = notification.object as! Int
 //        println("titled YZ: \(interval)")
     }
-    func handleEventTap(notification:NSNotification) { //point:V2D!=nil) {
+    func handleEventTap(notification:NSNotification) {
         var point:V2D! = notification.object as! V2D
-        //println("tapped: \(point)")
+//        println("tapped: \(point)")
         if selectedCharacter != nil {
-            // if point is in front - aim / shoot
-            // else if point is behind - jump
-            var dir:CGVector = CGVectorMake(50.0, 500.0)
-            var body:SKPhysicsBody! = selectedCharacter.display.physicsBody
-            println("body: \(body)")
-            body.applyImpulse( dir )
-            //body.applyForce( dir )
+            var center:V2D = selectedCharacter.center
+            var gravity:V2D = getGravity()
+            var centerToPoint:V2D = V2D.sub(point, point, center)
+            var dir:V2D = centerToPoint.norm()
+            selectedCharacter.aim(gravity, dir)
         }
-// if behind character
-// JUMP
-// if in front of character
-// SHOOT
+    }
+    func handleEventDoubleTap(notification:NSNotification) {
+        var point:V2D! = notification.object as! V2D
+//        println("double tapped: \(point)")
+        if selectedCharacter != nil {
+            var gravity:V2D = getGravity()
+            var dir:V2D = gravity.copy().flip().norm()
+            selectedCharacter.jump(dir)
+        }
+    }
+    func handleEventPress(notification:NSNotification) {
+        var point:V2D! = notification.object as! V2D
+//        println("pressed: \(point)")
     }
     func handleEventSwipe(notification:NSNotification) {
-        var tuple:[V2D] = notification.object as! [V2D]
-        var location:V2D! = tuple[0]
-        var direction:V2D! = tuple[1]
-//        println("swiped: \(tuple) ")
-//        println("swiped: \(location) | \(direction) ")
+        var list:[V2D] = notification.object as! [V2D]
+        var location:V2D! = list[0]
+        var direction:V2D! = list[1]
         
         var view:UIView = self.viewUI
         
@@ -232,7 +241,6 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         isPlaying = true
         scene.physicsWorld.speed = 1.0
         scene.physicsWorld.contactDelegate = self
-//        scene.physicsWorld.
         input.play()
     }
     func addCam(cam:Cam2D!=nil) {
@@ -241,7 +249,10 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
             selectedCam = 0
         }
     }
-    
+    func getGravity() -> V2D {
+        var gravity:V2D = V2D(scene.physicsWorld.gravity)
+        return gravity
+    }
     func defaultStuff() {
         var obj:Obj2D!
         var cam:Cam2D!
@@ -255,7 +266,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         
         
         var physics:SKPhysicsWorld = scene.physicsWorld
-        physics.gravity = CGVectorMake(0, -1.0)
+        physics.gravity = CGVectorMake(0, -10.0)
 //        physics.speed = 1.0
 //        physics.contactDelegate = self
         //
@@ -333,6 +344,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         node.physicsBody = body
             sprite = node as! SKSpriteNode
             sprite.texture = textureStill0
+            node.name = "mainChar"
         char.attachDisplayNode(node)
         
         container.addChild(node)
@@ -353,9 +365,12 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
 
         // surroundings
         rect = CGRectMake(0,0, 320, 400);
-        body = SKPhysicsBody(edgeLoopFromRect: rect) ; body.contactTestBitMask = Game2D.PHYSICS_CONTACT_BIT_MASK_ANY
+//        body = SKPhysicsBody(edgeLoopFromRect: rect) ; body.contactTestBitMask = Game2D.PHYSICS_CONTACT_BIT_MASK_ANY
+        // floor:
+        body = SKPhysicsBody(edgeFromPoint:CGPointMake(0,0), toPoint:CGPointMake(320,0)) ; body.contactTestBitMask = Game2D.PHYSICS_CONTACT_BIT_MASK_ANY
         body.categoryBitMask = Game2D.PHYSICS_CATEGORY_BIT_MASK_ANY ; body.collisionBitMask = Game2D.PHYSICS_COLLISION_BIT_MASK_ANY
-        node = SKNode()
+        node = SKNode2D()
+        node.name = "floor"
         node.physicsBody = body
         container.addChild(node)
  /*
@@ -459,24 +474,66 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
     
     @objc func didBeginContact(contact:SKPhysicsContact) {
         //println("contact Begin: \(contact) ")
+        var objA:Obj2D!
+        var objB:Obj2D!
+        var normal:CGVector = contact.contactNormal // from A to B
         var bodyA:SKPhysicsBody = contact.bodyA
         var bodyB:SKPhysicsBody = contact.bodyB
+        /*
+        var point:CGPoint = contact.contactPoint
+        println("C: \(point) \(normal.dx), \(normal.dy)")
+        var posA:CGPoint! = bodyA.node?.position
+        var posB:CGPoint! = bodyB.node?.position
+        var CtoA:V2D = V2D( Double(posA.x-point.x), Double(posA.y-point.y) )
+        var CtoB:V2D = V2D( Double(posB.x-point.x), Double(posB.y-point.y) )
+        println("A: \(posA) \(CtoA)")
+        println("B: \(posB) \(CtoB)")
+        */
+        var norm:V2D = V2D( Double(normal.dx), Double(normal.dy) )
+        norm.norm()
+        var grav:V2D = getGravity()
+        grav.norm()
         
-        if let a = bodyA.node as? SKSpriteNode2D {
-            println("a is 2D \(a.obj2D)")
+        if let a = bodyA.node as? SKObj2D {
+            objA = a.obj2D
         }
-        if let b = bodyB.node as? SKSpriteNode2D {
-            println("b is 2D \(b.obj2D)")
+        if let b = bodyB.node as? SKObj2D {
+            objB = b.obj2D
         }
-        
-        //if bodyA == selectedCharacter.physicsBody || bodyB == selectedCharacter.physicsBody {
-//        if bodyA.node == selectedCharacter || bodyB.node == selectedCharacter {
-//            // println("found: \(selectedCharacter)")
-//        }
-        
+        if objB != nil {
+            objB.handleCollisionStart(grav, norm,objA)
+        }
+        norm.flip()
+        if objA != nil {
+            objA.handleCollisionStart(grav, norm,objB)
+        }
+        //
     }
     @objc func didEndContact(contact:SKPhysicsContact) {
+        var objA:Obj2D!
+        var objB:Obj2D!
+        var normal:CGVector = contact.contactNormal // from B to A
+        var bodyA:SKPhysicsBody = contact.bodyA
+        var bodyB:SKPhysicsBody = contact.bodyB
+        var norm:V2D = V2D( Double(normal.dx), Double(normal.dy) )
+        norm.norm()
+        var gravity:CGVector = scene.physicsWorld.gravity
+        var grav:V2D = V2D( Double(gravity.dx), Double(gravity.dy) )
+        grav.norm()
         //println("contact End: \(contact) ")
+        if let a = bodyA.node as? SKObj2D {
+            objA = a.obj2D
+        }
+        if let b = bodyB.node as? SKObj2D {
+            objB = b.obj2D
+        }
+        if objB != nil {
+            objB.handleCollisionEnd(grav, norm,objA)
+        }
+        norm.flip()
+        if objA != nil {
+            objA.handleCollisionEnd(grav, norm,objB)
+        }
     }
     func updateFrame(frame:CGRect) {
         view.frame = frame

@@ -12,6 +12,11 @@ class Block2D : Obj2D {
             return V2D(pos.x+size.x, pos.y+size.y)
         }
     }
+    var center:V2D {
+        get {
+            return V2D(pos.x+size.x*0.5, pos.y+size.y*0.5)
+        }
+    }
     override var description:String {
         get {
             var end:V2D = self.end
