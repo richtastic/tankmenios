@@ -35,16 +35,23 @@ class Physics2D : Block2D {
         size = nil
     }
     
-    override func process(time: NSTimeInterval, _ physics:SKPhysicsWorld) {
-        super.process(time, physics)
+    override func process(time: NSTimeInterval, _ dt:NSTimeInterval, _ physics:SKPhysicsWorld) {
+        super.process(time, dt, physics)
         updateFromDisplay()
         // how to tell if is on ground is not so reliable WHEN BASED ON COLLISION START / STOP
         var height:CGFloat = 1.0
         var dy:CGFloat = 0.1
-        var rect:CGRect = CGRectMake(CGFloat(pos.x),CGFloat(pos.y) - height - dy, CGFloat(size.x) , height)
+// THIS RECT IS IN TERMS OF ABSOLUTE POSITION ... NEED TO ANTI-TRANSFORM IT, OR USE OTHER METHOD
+// SCENE COORDINATES
+        var rect:CGRect = CGRectMake(CGFloat(pos.x),CGFloat(pos.y) - height - dy, CGFloat(size.x) , height) // correct
+        //var rect:CGRect = CGRectMake(CGFloat(pos.x+size.x),CGFloat(pos.y), height, CGFloat(size.x)) // right
         //var rect:CGRect = CGRectMake(20,20, 10,10)
         var body:SKPhysicsBody! = physics.bodyInRect(rect)
-        if body == self.body {
+        var isSame:Bool = body === self.body
+        //println("body below: \(body) | \(isSame)")
+        if body == nil {
+            //
+        } else if body === self.body {
             body = nil
         }
         var isBodyBelow:Bool = body != nil
@@ -119,20 +126,21 @@ class Physics2D : Block2D {
         body.linearDamping = CGFloat(fluidFriction)
         return body
     }
-    override func displayNodeFromDisplay() -> SKNode! {
+    /*override func displayNodeFromDisplay() -> SKNode! {
         var node:SKSpriteNode2D!
         node = SKSpriteNode2D()
         
         var siz:CGSize = CGSize(width: size.x, height:size.y)
         var center:CGPoint = CGPoint(x: size.x*0.5, y: size.y*0.5)
-        var position:CGPoint = CGPoint(x:200.0, y:300.0)
+        var position:CGPoint = CGPoint(x: pos.x, y:pos.y)
         node.position = position
         node.anchorPoint = CGPoint(x:0, y:0)
         node.size = siz
         
         return node
-    }
+    }*/
     func updateFromDisplay() {
+//        println("update from display: \(pos) \(display.position)")
         var body:SKPhysicsBody! = display.physicsBody
         if rotates {
             var angle:Double = Double(display.zRotation)

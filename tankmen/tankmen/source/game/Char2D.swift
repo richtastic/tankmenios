@@ -47,13 +47,12 @@ class Char2D : Physics2D {
         // size: static?
         // inAir: floating y/n
     }
-    override func process(time:NSTimeInterval, _ physics:SKPhysicsWorld){
-        super.process(time, physics)
+    override func process(time:NSTimeInterval, _ dt:NSTimeInterval, _ physics:SKPhysicsWorld){
+        super.process(time, dt, physics)
         var velocity:CGVector! = display.physicsBody?.velocity
         var vel:V2D = V2D(velocity)
         var desiredVelocity:V2D = dir.copy().setLength(desiredSpeed)
         var speedInDir:Double = V2D.dot(vel,dir)
-        
         if speedInDir < desiredSpeed { // increment velocity
             var diffVel:Double = desiredSpeed - speedInDir
             var incSpeed:Double = Char2D.SPEED_INCREMENT_GND

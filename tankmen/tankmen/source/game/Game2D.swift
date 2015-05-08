@@ -62,6 +62,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         scene.dispatch.addObserver(self, selector:"handleEventSceneUpdateFinish:", name:SKScene2D.EVENT_UPDATE_FINISH, object:nil)
 //        scene.physicsWorld.contactDelegate = self
         scene.scaleMode = SKSceneScaleMode.ResizeFill
+        //scene.scaleMode = SKSceneScaleMode.AspectFit
         scene.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 1.0, alpha: 0.5);
         view.presentScene(scene)
         //
@@ -89,19 +90,39 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         var objs:[Obj2D]
         var cam:Cam2D = cams[selectedCam]
         var gravity:V2D = getGravity()
+        var physics:SKPhysicsWorld = scene.physicsWorld
+        var dt:Double = 1.0/60.0
+        // move camera toward object
+        cam.process(currentTime, dt, physics)
+        //println(" \(cam.pos.copy().flip().toCGPoint()) ")
+        //println(" \(cam.pos) ")
+        var scale:Double = 0.5
+        cam.scale.x = scale
+        cam.scale.y = scale
+        container.xScale = CGFloat(cam.scale.x)
+        container.yScale = CGFloat(cam.scale.y)
+        var screenSize:V2D = V2D(view.frame.size)
+        var screenCenter:V2D = screenSize.copy().scale(0.5)
+        var target:V2D = V2D.add(cam.pos, selectedCharacter.size.copy().scale(0.5).scale(cam.scale.x, cam.scale.y) ) // cam.pos // V2D.add(cam.pos, cam.target)
+        target.scale(cam.scale.x, cam.scale.y)
+        var offset:V2D = V2D.sub( target, screenCenter )
+        container.position = offset.flip().toCGPoint()
         //cell = grid.getCell(cam.pos.x,cam.pos.y)
         cells = grid.getCellsAbout(cam.pos.x,cam.pos.y)
+        //println(cells.count)
         // process
+        // remove all objects not in visible cell list
         for cell in cells {
             //println(cell)
             dyns = cell.dynamics
             for dyn in dyns {
-                dyn.process(currentTime, scene.physicsWorld)
+                dyn.process(currentTime, dt, physics)
                 // possibly move cells ...
             }
             objs = cell.statics
+            //println("objs: \(objs)")
             for obj in objs {
-                obj.process(currentTime, scene.physicsWorld)
+                obj.process(currentTime, dt, physics)
             }
             // ...
         }
@@ -307,6 +328,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         println("textureStill0: \(textureStill0) ")
         
         // physics
+        var pos:V2D!
         var point:CGPoint!
         var size:CGSize!
         var center:CGPoint!
@@ -317,25 +339,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         var body:SKPhysicsBody!
         
         
-        // char
-        /*
-        //var character:SKSpriteNode = SKSpriteNode(texture:textureStill0)
-        var character:SKSpriteNode2D = SKSpriteNode2D()
-        character.texture = textureStill0
-        character.obj2D = Obj2D()
-//        character.anchorPoint = CGPoint(x:0, y:0)
-//        character.position = CGPoint(x:200.0, y:300.0)
-        //character.size = CGSizeMake(100, 100);
-        character.zPosition = 10
-//        action = SKAction.rotateToAngle(CGFloat(M_PI*0.2), duration:0)
-//        character.runAction(action)
-//        var textureAnimation:NSArray = NSArray(array:[textureStill0,textureStill1,textureStill2,textureStill3,textureStill4, textureStill3,textureStill2,textureStill1])
-//        action = SKAction.repeatActionForever(SKAction.animateWithTextures(textureAnimation, timePerFrame: 0.1, resize:false, restore:true))
-//        character.runAction(action);
-        container.addChild(character)
-        
-//selectedCharacter = character
-        */
+
         // actual character
         var char:Char2D!
         char = Char2D()
@@ -355,11 +359,13 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         var cell:Cell2D!
         println("char: \(char)")
         println("grid: \(grid)")
-        cell = grid.getCell(char.pos.x, char.pos.y)
+        pos = char.pos
+        cell = grid.getCell(pos.x, pos.y)
         cell.addDynamic(char)
         
         
         selectedCharacter = char
+        cam.target = selectedCharacter
         
 
 
@@ -367,12 +373,35 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         rect = CGRectMake(0,0, 320, 400);
 //        body = SKPhysicsBody(edgeLoopFromRect: rect) ; body.contactTestBitMask = Game2D.PHYSICS_CONTACT_BIT_MASK_ANY
         // floor:
-        body = SKPhysicsBody(edgeFromPoint:CGPointMake(0,0), toPoint:CGPointMake(320,0)) ; body.contactTestBitMask = Game2D.PHYSICS_CONTACT_BIT_MASK_ANY
+        body = SKPhysicsBody(edgeFromPoint:CGPointMake(-1000,0), toPoint:CGPointMake(2000,0)) ; body.contactTestBitMask = Game2D.PHYSICS_CONTACT_BIT_MASK_ANY
         body.categoryBitMask = Game2D.PHYSICS_CATEGORY_BIT_MASK_ANY ; body.collisionBitMask = Game2D.PHYSICS_COLLISION_BIT_MASK_ANY
         node = SKNode2D()
         node.name = "floor"
         node.physicsBody = body
         container.addChild(node)
+        
+        
+        // BG objects
+        CGRect(x:0.0, y:1.0-0.0, width:1.0, height:1.0)
+        //image = UIImage(named:"pattern0.png")
+        fileRelative = "data/images/pattern0.png"
+        fileBundle = NSBundle.mainBundle().pathForResource(fileRelative, ofType:nil)
+        image = UIImage(contentsOfFile: fileBundle)
+        var texturePattern0:SKTexture! = SKTexture(image:image)//(rect:rect, inTexture: textureAtlas.textureNamed("pattern0.png") )
+        println("texturePattern0: \(texturePattern0) ")
+        
+        var blockBG:Block2D! = Block2D()
+        blockBG.pos.set(200,200)
+        blockBG.size.set(100,100)
+            node = blockBG.displayNodeFromDisplay()
+            sprite = node as! SKSpriteNode
+            sprite.texture = texturePattern0
+            sprite.name = "blockBG0"
+            container.addChild(node)
+        pos = blockBG.pos
+        cell = grid.getCell(pos.x,pos.y)
+        cell.addBackground(blockBG)
+        
  /*
         // character
         size = CGSizeMake(100, 100)

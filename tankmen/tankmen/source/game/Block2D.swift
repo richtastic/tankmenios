@@ -23,13 +23,14 @@ class Block2D : Obj2D {
             return "[Block2D X: \(pos.x)->\(end.x), Y: \(pos.y)->\(end.y)]"
         }
     }
-    init (posX:Double=0.0, posY:Double=0.0, velX:Double=0.0, velY:Double=0.0, dirX:Double=0.0, dirY:Double=0.0, sizeX:Double=0.0, sizeY:Double=0.0) {
+    init (posX:Double=0.0, posY:Double=0.0, velX:Double=0.0, velY:Double=0.0, dirX:Double=0.0, dirY:Double=0.0, sizeX:Double=100.0, sizeY:Double=100.0) {
         super.init(posX:posX, posY:posY, velX:velX, velY:velY, dirX:dirX, dirY:dirY)
         size = V2D(sizeX, sizeY)
     }
     deinit {
         size = nil
     }
+    
     
     func attachDisplayNode(node:SKNode) {
         display = node
@@ -38,9 +39,22 @@ class Block2D : Obj2D {
             node2D.obj2D = self
         }
     }
+//    func displayNodeFromDisplay() -> SKNode! {
+//        var node:SKNode!
+//        node = SKNode()
+//        return node
+//    }
     func displayNodeFromDisplay() -> SKNode! {
-        var node:SKNode!
-        node = SKNode()
+        var node:SKSpriteNode2D!
+        node = SKSpriteNode2D()
+        
+        var siz:CGSize = CGSize(width: size.x, height:size.y)
+        var center:CGPoint = CGPoint(x: size.x*0.5, y: size.y*0.5)
+        var position:CGPoint = CGPoint(x: pos.x, y:pos.y )
+        node.position = position
+        node.anchorPoint = CGPoint(x:0, y:0)
+        node.size = siz
+        
         return node
     }
     

@@ -43,6 +43,9 @@ class V2D : Printable {
     convenience init (_ point:CGPoint) {
         self.init( Double(point.x), Double(point.y) )
     }
+    convenience init (_ size:CGSize) {
+        self.init( Double(size.width), Double(size.height) )
+    }
     deinit {
         _x = 0.0
         _y = 0.0
@@ -90,6 +93,10 @@ class V2D : Printable {
         set( _x*s, _y*s )
         return self
     }
+    func scale(sX:Double, _ sY:Double) -> V2D {
+        set( _x*sX, _y*sY )
+        return self
+    }
     func setLength(len:Double) -> V2D {
         var l:Double = length()
         set( _x*len/l, _y*len/l )
@@ -112,7 +119,7 @@ class V2D : Printable {
         }
         return 0.0
     }
-    static func angleDirection(_ a:V2D!=nil, _ b:V2D!=nil) -> Double {
+    static func angleDirection(_ a:V2D! = nil, _ b:V2D! = nil) -> Double {
         var ang:Double = angle(a,b)
         var crs:Double = cross(a,b)
         if crs >= 0.0 {
@@ -120,7 +127,7 @@ class V2D : Printable {
         }
         return -ang
     }
-    static func add(c:V2D!, _ a:V2D!, _ b:V2D!) -> V2D { // c = a + b
+    static func add(_ c:V2D! = nil, _ a:V2D! = nil, _ b:V2D! = nil) -> V2D { // c = a + b
         if b !== nil {
             c.x = a.x + b.x
             c.y = a.y + b.y
@@ -128,7 +135,7 @@ class V2D : Printable {
         }
         return V2D(c.x + a.x, c.y + a.y)
     }
-    static func sub(c:V2D!, _ a:V2D!, _ b:V2D!) -> V2D { // c = a - b
+    static func sub(_ c:V2D! = nil, _ a:V2D! = nil, _ b:V2D! = nil) -> V2D { // c = a - b
         if b !== nil {
             c.x = a.x - b.x
             c.y = a.y - b.y

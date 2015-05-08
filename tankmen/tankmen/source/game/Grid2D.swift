@@ -48,11 +48,12 @@ class Grid2D {
         return min( max(0,j*countX + i),cells.count-1 )
     }
     func getCellsAbout(x:Double, _ y:Double) -> [Cell2D] {
-        var cell:Cell2D = getCell(x,y)
-        var cells:[Cell2D] = [Cell2D]()
-        cells.append(cell)
-        // get all cells within a radius of cell
-        return cells
+        return cells;
+//        var cell:Cell2D = getCell(x,y)
+//        var cells:[Cell2D] = [Cell2D]()
+//        cells.append(cell)
+//        // get all cells within a radius of cell
+//        return cells
     }
 }
 
