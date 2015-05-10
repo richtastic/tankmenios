@@ -4,9 +4,29 @@ import UIKit
 
 class Grid2D {
     var size:V2D! // individual block sizes
-    var countX:Int = 0
-    var countY:Int = 0
-    var cells:Array<Cell2D>
+    private var countX:Int = 0
+    private var countY:Int = 0
+    private var cells:Array<Cell2D>
+    var cols:Int {
+        get {
+            return countX
+        }
+    }
+    var rows:Int {
+        get {
+            return countY
+        }
+    }
+    var width:Double {
+        get {
+            return size.x * Double(countX)
+        }
+    }
+    var height:Double {
+        get {
+            return size.y * Double(countY)
+        }
+    }
     
     init (width:Int=0, height:Int=0, sizeX:Double=100.0, sizeY:Double=100.0) {
         cells = Array<Cell2D>()

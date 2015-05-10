@@ -4,9 +4,9 @@ import UIKit
 import SpriteKit
 
 class Game2D : NSObject, SKPhysicsContactDelegate {
-    static let Z_INDEX_BACKGROUND_DEFAULT:CGFloat = 1000
-    static let Z_INDEX_MIDGROUND_DEFAULT:CGFloat = 2000
-    static let Z_INDEX_FOREGROUND_DEFAULT:CGFloat = 3000
+    static let Z_INDEX_BACKGROUND_DEFAULT:Double = 1000
+    static let Z_INDEX_MIDGROUND_DEFAULT:Double = 2000
+    static let Z_INDEX_FOREGROUND_DEFAULT:Double = 3000
     //
     static let PHYSICS_CONTACT_BIT_MASK_ANY:UInt32 = 0xFFFFFFFF // contact to alert for
     static let PHYSICS_CONTACT_BIT_MASK_CHAR:UInt32 = 0x1 << 0
@@ -96,7 +96,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         cam.process(currentTime, dt, physics)
         //println(" \(cam.pos.copy().flip().toCGPoint()) ")
         //println(" \(cam.pos) ")
-        var scale:Double = 0.5
+        var scale:Double = 1.0 //0.5
         cam.scale.x = scale
         cam.scale.y = scale
         container.xScale = CGFloat(cam.scale.x)
@@ -137,8 +137,14 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
             for obj in objs {
                 obj.render(currentTime, cam, gravity)
             }
-            // ...
-            
+            objs = cell.backgrounds
+            for obj in objs {
+                obj.render(currentTime, cam, gravity)
+            }
+            objs = cell.foregrounds
+            for obj in objs {
+                obj.render(currentTime, cam, gravity)
+            }
         }
 
     }
@@ -275,6 +281,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         return gravity
     }
     func defaultStuff() {
+        var i:Int, j:Int, index:Int
         var obj:Obj2D!
         var cam:Cam2D!
         
@@ -350,6 +357,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
             sprite.texture = textureStill0
             node.name = "mainChar"
         char.attachDisplayNode(node)
+        char.depth = 0.0; // Game2D.Z_INDEX_MIDGROUND_DEFAULT
         
         container.addChild(node)
         
@@ -382,25 +390,61 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         
         
         // BG objects
-        CGRect(x:0.0, y:1.0-0.0, width:1.0, height:1.0)
-        //image = UIImage(named:"pattern0.png")
         fileRelative = "data/images/pattern0.png"
         fileBundle = NSBundle.mainBundle().pathForResource(fileRelative, ofType:nil)
         image = UIImage(contentsOfFile: fileBundle)
         var texturePattern0:SKTexture! = SKTexture(image:image)//(rect:rect, inTexture: textureAtlas.textureNamed("pattern0.png") )
-        println("texturePattern0: \(texturePattern0) ")
+        //println("texturePattern0: \(texturePattern0) ")
         
-        var blockBG:Block2D! = Block2D()
-        blockBG.pos.set(200,200)
-        blockBG.size.set(100,100)
+        fileRelative = "data/images/cloud0.png"
+        fileBundle = NSBundle.mainBundle().pathForResource(fileRelative, ofType:nil)
+        image = UIImage(contentsOfFile: fileBundle)
+        var textureAmbience0:SKTexture! = SKTexture(image:image)
+        
+        
+        var blockBG:Block2D!
+        var rows:Int = grid.rows
+        var cols:Int = grid.cols
+        var cellSize:V2D = grid.size
+        index = 0
+        for j=0; j<rows; ++j {
+            for i=0; i<cols; ++i {
+                blockBG = Block2D()
+                blockBG.pos.set(cellSize.x*Double(i), cellSize.y*Double(j) )
+                blockBG.size.copy(cellSize)
+                node = blockBG.displayNodeFromDisplay()
+                blockBG.attachDisplayNode(node)
+                sprite = node as! SKSpriteNode
+                sprite.texture = texturePattern0
+                sprite.name = "blockBG" + String(index)
+                container.addChild(node)
+                pos = blockBG.pos
+                cell = grid.getCell(pos.x,pos.y)
+                cell.addBackground(blockBG)
+                blockBG.depth = -2.0//Game2D.Z_INDEX_BACKGROUND_DEFAULT
+                ++index
+            }
+        }
+        var locations:[V2D] = [ V2D(50,50) ]
+        cellSize.set(25.0,25.0)
+        index = 0
+        for i=0; i<locations.count; ++i {
+            var loc:V2D = locations[i]
+            blockBG = Block2D()
+            blockBG.pos.set(loc.x,loc.y )
+            blockBG.size.copy(cellSize)
             node = blockBG.displayNodeFromDisplay()
+            blockBG.attachDisplayNode(node)
             sprite = node as! SKSpriteNode
-            sprite.texture = texturePattern0
-            sprite.name = "blockBG0"
+            sprite.texture = textureAmbience0
+            sprite.name = "blockMG" + String(index)
             container.addChild(node)
-        pos = blockBG.pos
-        cell = grid.getCell(pos.x,pos.y)
-        cell.addBackground(blockBG)
+            pos = blockBG.pos
+            cell = grid.getCell(pos.x,pos.y)
+            cell.addBackground(blockBG)
+            blockBG.depth = -1.0//Game2D.Z_INDEX_BACKGROUND_DEFAULT + 1.0
+            println("BLOCK: \(blockBG.display)")
+        }
         
  /*
         // character

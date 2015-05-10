@@ -5,6 +5,7 @@ import SpriteKit
 
 class Physics2D : Block2D {
     static var MIN_ANGLE_LAND:Double = 120*(M_PI/180.0)
+    private var physics:SKNode2D! // separate display and physics
     var body:SKPhysicsBody! {
         get {
             return display.physicsBody

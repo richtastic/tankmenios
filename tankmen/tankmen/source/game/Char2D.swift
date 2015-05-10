@@ -32,7 +32,7 @@ class Char2D : Physics2D {
         }
     }
     
-    override init (posX:Double=0.0, posY:Double=0.0, velX:Double=0.0, velY:Double=0.0, dirX:Double=0.0, dirY:Double=0.0, sizeX:Double=50.0, sizeY:Double=100.0) {
+    override init (posX:Double=0.0, posY:Double=0.0, velX:Double=0.0, velY:Double=0.0, dirX:Double=0.0, dirY:Double=0.0, sizeX:Double=20.0, sizeY:Double=40.0) {
         super.init(posX:posX, posY:posY, velX:velX, velY:velY, dirX:dirX, dirY:dirY, sizeX:sizeX, sizeY:sizeY)
         sequencer = CharSequencer()
     }
@@ -41,7 +41,7 @@ class Char2D : Physics2D {
     }
     
     override func render(time:NSTimeInterval, _ cam:Cam2D, _ gravity:V2D) {
-        //
+        super.render(time, cam, gravity)
         // dir: rotate to norm
         // dir: flip x/y if necessary
         // size: static?

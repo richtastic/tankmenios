@@ -5,6 +5,18 @@ import SpriteKit
 
 class Block2D : Obj2D {
     var display:SKNode!
+    private var _depth:Double = 0.0
+    var depth:Double {
+        get {
+            return _depth
+        }
+        set {
+            _depth = newValue
+            if display !== nil {
+                display.zPosition = CGFloat( _depth )
+            }
+        }
+    }
     
     var size:V2D!
     var end:V2D {
@@ -39,11 +51,6 @@ class Block2D : Obj2D {
             node2D.obj2D = self
         }
     }
-//    func displayNodeFromDisplay() -> SKNode! {
-//        var node:SKNode!
-//        node = SKNode()
-//        return node
-//    }
     func displayNodeFromDisplay() -> SKNode! {
         var node:SKSpriteNode2D!
         node = SKSpriteNode2D()
@@ -56,6 +63,32 @@ class Block2D : Obj2D {
         node.size = siz
         
         return node
+    }
+    
+    override func render(time:NSTimeInterval, _ cam:Cam2D, _ gravity:V2D) {
+        super.render(time, cam, gravity)
+        if display !== nil {
+            if display.physicsBody === nil { // sk physics and display are intimitely attracted
+        var camScaleFactor:Double = 1.0
+        var camLense:Double = 100.0
+        var camZ:Double = 100.0
+        var relZ:Double = camZ - _depth
+        //var scale:Double = (camScaleFactor * camLense) / (camLense + relZ)
+        var scale:Double = camScaleFactor * (1.0 - 10.0/relZ)
+        scale = -1.0/_depth;
+//        println("SCALE: \(scale)")
+// IS THIS SOMEHWAT ACCOUNTED FOR IN THE CONTAINER VIEW
+        var newX:Double = (pos.x - cam.pos.x) * scale
+        var newY:Double = (pos.y - cam.pos.y) * scale
+                
+//                var range:Double = 1000.0
+//                newX = pos.x + 5.0*((Double( arc4random_uniform( UInt32(range)) ) - range*0.5)/range)
+                display.position = CGPointMake( CGFloat(newX), CGFloat(newY) )
+                // scale X
+                // scale Y
+                //println("display: \(newX), \(newY)")
+            }
+        }
     }
     
 }
