@@ -45,17 +45,25 @@ _tbd:_
 | **04/28/15** | start concept art | - |
 | **05/01/15** | start iOS project | - |
 | **05/03/15** | displaying graphics | - |
-| _05/?/15_ | controls | TDB |
-| _05/?/15_ | resource management | TDB |
-| _05/?/15_ | physics interaction | TDB |
-| _05/?/15_ | single level gameplay | TDB |
-| _05/?/15_ | screen transitions | TDB |
-| _06/?/15_ | present concept | TDB |
-| _06/?/15_ | level design program | TDB |
-| _07/?/15_ | start recruiting | TDB |
-| _08/?/15_ | beta tesing | TDB |
-| _09/?/15_ | QA | TDB |
-| _10/?/15_ | release | TDB |
+| _06/30/15_ | physics interaction | TDB |
+| _07/10/15_ | controls | TDB |
+| _07/20/15_ | resource management | TDB |
+| _07/31/15_ | single level gameplay | TDB |
+| _08/10/15_ | screen transitions | TDB |
+| _09/07/15_ | present concept | TDB |
+| _09/28/15_ | level design program | TDB |
+| _10/12/15_ | start recruiting | TDB |
+| _10/31/15_ | beta tesing | TDB |
+| _11/09/15_ | QA | TDB |
+| _11/30/15_ | release | TDB |
+
+
+
+
+
+
+
+
 
 
 

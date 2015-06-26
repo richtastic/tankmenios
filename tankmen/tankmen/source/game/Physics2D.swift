@@ -5,10 +5,10 @@ import SpriteKit
 
 class Physics2D : Block2D {
     static var MIN_ANGLE_LAND:Double = 120*(M_PI/180.0)
-    private var physics:SKNode2D! // separate display and physics
+    var physics:SKNode! // separate display and physics
     var body:SKPhysicsBody! {
         get {
-            return display.physicsBody
+            return physics.physicsBody
         }
     }
     var mass:Double = 15.0
@@ -39,9 +39,10 @@ class Physics2D : Block2D {
     override func process(time: NSTimeInterval, _ dt:NSTimeInterval, _ physics:SKPhysicsWorld) {
         super.process(time, dt, physics)
         updateFromDisplay()
+if (false) {
         // how to tell if is on ground is not so reliable WHEN BASED ON COLLISION START / STOP
         var height:CGFloat = 1.0
-        var dy:CGFloat = 0.1
+        var dy:CGFloat = 1.0
 // THIS RECT IS IN TERMS OF ABSOLUTE POSITION ... NEED TO ANTI-TRANSFORM IT, OR USE OTHER METHOD
 // SCENE COORDINATES
         var rect:CGRect = CGRectMake(CGFloat(pos.x),CGFloat(pos.y) - height - dy, CGFloat(size.x) , height) // correct
@@ -56,8 +57,9 @@ class Physics2D : Block2D {
             body = nil
         }
         var isBodyBelow:Bool = body != nil
-        //println("touching ground: \(body) \(isBodyBelow)")
+        println("touching ground: \(body) \(isBodyBelow)")
         inAir = !isBodyBelow
+}
     }
     
     internal func handleLanded() {
@@ -127,30 +129,31 @@ class Physics2D : Block2D {
         body.linearDamping = CGFloat(fluidFriction)
         return body
     }
-    /*override func displayNodeFromDisplay() -> SKNode! {
-        var node:SKSpriteNode2D!
-        node = SKSpriteNode2D()
-        
-        var siz:CGSize = CGSize(width: size.x, height:size.y)
-        var center:CGPoint = CGPoint(x: size.x*0.5, y: size.y*0.5)
-        var position:CGPoint = CGPoint(x: pos.x, y:pos.y)
-        node.position = position
-        node.anchorPoint = CGPoint(x:0, y:0)
-        node.size = siz
-        
-        return node
-    }*/
+    
+    
+    func physicsNodeFromDisplay() -> SKNode! {
+        return displayNodeFromDisplay()
+    }
+    func attachPhysicsNode(node:SKNode) {
+        println("physic node: \(node)")
+        physics = node
+        if node is SKObj2D {
+            var node2D:SKObj2D = node as! SKObj2D
+            node2D.obj2D = self
+        }
+    }
+    
     func updateFromDisplay() {
 //        println("update from display: \(pos) \(display.position)")
-        var body:SKPhysicsBody! = display.physicsBody
+        var body:SKPhysicsBody! = physics.physicsBody
         if rotates {
-            var angle:Double = Double(display.zRotation)
+            var angle:Double = Double(physics.zRotation)
             dir.set(1.0,0.0)
             dir.rotate(angle)
         }
         if dynamic {
-            var position = display.position
-            pos.set( Double(position.x), Double(position.y) )
+//            var position = display.position
+//            pos.set( Double(position.x), Double(position.y) )
 //            println("update pos: \(pos)")
         }
     }

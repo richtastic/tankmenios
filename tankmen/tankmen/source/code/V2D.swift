@@ -105,6 +105,25 @@ class V2D : Printable {
     func flip() -> V2D {
         return scale( -1.0)
     }
+    func flipX() -> V2D {
+        self.x = -self.x
+        return self
+    }
+    func flipY() -> V2D {
+        self.y = -self.y
+        return self
+    }
+    func add (_ v:V2D! = nil) -> V2D {
+        V2D.add(self, self, v)
+        return self
+    }
+    func sub (_ v:V2D! = nil) -> V2D {
+        V2D.sub(self, self, v)
+        return self
+    }
+    func sub (_ x:Double! = nil, _ y:Double! = nil) -> V2D {
+        return V2D.sub(self, x, y)
+    }
     static func dot(_ a:V2D!=nil, _ b:V2D!=nil) -> Double {
         return a.x*b.x + a.y*b.y
     }
@@ -142,5 +161,19 @@ class V2D : Printable {
             return c
         }
         return V2D(c.x - a.x, c.y - a.y)
+    }
+    static func add (_ v:V2D! = nil, _ x:Double! = nil, _ y:Double! = nil) -> V2D {
+        if v != nil {
+            v.x += x
+            v.y += y
+        }
+        return v
+    }
+    static func sub (_ v:V2D! = nil, _ x:Double! = nil, _ y:Double! = nil) -> V2D {
+        if v != nil {
+            v.x -= x
+            v.y -= y
+        }
+        return v
     }
 }

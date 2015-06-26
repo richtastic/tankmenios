@@ -13,10 +13,10 @@ enum Char2DSpeedState {
 class Char2D : Physics2D {
     static let SPEED_STILL_AIR:Double = 0.0
     static let SPEED_STILL_GND:Double = 0.0
-    static let SPEED_WALK_AIR:Double = 20.0
-    static let SPEED_WALK_GND:Double = 200.0
-    static let SPEED_RUN_AIR:Double = 50.0
-    static let SPEED_RUN_GND:Double = 400.0
+    static let SPEED_WALK_AIR:Double = 10.0
+    static let SPEED_WALK_GND:Double = 20.0
+    static let SPEED_RUN_AIR:Double = 20.0
+    static let SPEED_RUN_GND:Double = 100.0
     static let SPEED_INCREMENT_AIR:Double = 20.0
     static let SPEED_INCREMENT_GND:Double = 50.0
     static let SPEED_JUMP:Double = 500.0
@@ -32,6 +32,19 @@ class Char2D : Physics2D {
         }
     }
     
+    override var depth:Double { // doesn't matter, should be blank
+        get {
+            return super.depth
+        }
+        set {
+            super.depth = newValue
+            if physics !== nil {
+                physics.zPosition = CGFloat( super.depth )
+            }
+        }
+    }
+
+    
     override init (posX:Double=0.0, posY:Double=0.0, velX:Double=0.0, velY:Double=0.0, dirX:Double=0.0, dirY:Double=0.0, sizeX:Double=20.0, sizeY:Double=40.0) {
         super.init(posX:posX, posY:posY, velX:velX, velY:velY, dirX:dirX, dirY:dirY, sizeX:sizeX, sizeY:sizeY)
         sequencer = CharSequencer()
@@ -42,14 +55,20 @@ class Char2D : Physics2D {
     
     override func render(time:NSTimeInterval, _ cam:Cam2D, _ gravity:V2D) {
         super.render(time, cam, gravity)
+//        display.position = CGPointMake(-30,0)
+//        physics.position = CGPointMake(0,0)
         // dir: rotate to norm
         // dir: flip x/y if necessary
         // size: static?
         // inAir: floating y/n
+        
+//        println("POS: \(pos) - \(physics.position) - \(display.position)")
+        var ppp:V2D = V2D(pos.x - cam.pos.x, pos.y - cam.pos.y)
+//        println("RENDER: \(pos) - \(cam.pos) = \(ppp)")
     }
-    override func process(time:NSTimeInterval, _ dt:NSTimeInterval, _ physics:SKPhysicsWorld){
-        super.process(time, dt, physics)
-        var velocity:CGVector! = display.physicsBody?.velocity
+    override func process(time:NSTimeInterval, _ dt:NSTimeInterval, _ world:SKPhysicsWorld){
+        super.process(time, dt, world)
+        var velocity:CGVector! = physics.physicsBody?.velocity
         var vel:V2D = V2D(velocity)
         var desiredVelocity:V2D = dir.copy().setLength(desiredSpeed)
         var speedInDir:Double = V2D.dot(vel,dir)
@@ -67,6 +86,8 @@ class Char2D : Physics2D {
 //            vel.scale(mass)
 //            body.applyForce( vel.toCGVector() )
         }
+pos.set( Double(physics.position.x), Double(physics.position.y) )
+//vel.set( Double(physics.physicsBody!.velocity.dx), Double(physics.physicsBody!.velocity.dy) )
     }
     override internal func handleLanded() {
         super.handleLanded()
@@ -134,9 +155,12 @@ class Char2D : Physics2D {
             // SET IMPULSE
             //jmp.scale(mass)
             //body.applyImpulse( jmp.toCGVector() )
+        } else {
+            println("IN AIR")
         }
     }
     func aim(gravity:V2D, _ dir:V2D) {
+        println("aim: \(dir)")
         self.aim = dir // upper-body goto aim direction
         //var cen:V2D = center
         var right:V2D = gravity.rotate(M_PI*0.5)

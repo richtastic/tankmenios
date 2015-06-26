@@ -57,6 +57,10 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         // view
         view = SKView()
         view.backgroundColor = UIColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 0.5);
+        // DEBUG
+        view.showsFPS = true
+        view.showsNodeCount = true
+        view.showsPhysics = true
         // scene
         scene = SKScene2D()
         scene.dispatch.addObserver(self, selector:"handleEventSceneUpdateFinish:", name:SKScene2D.EVENT_UPDATE_FINISH, object:nil)
@@ -93,6 +97,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         var physics:SKPhysicsWorld = scene.physicsWorld
         var dt:Double = 1.0/60.0
         // move camera toward object
+        cam.target = selectedCharacter
         cam.process(currentTime, dt, physics)
         //println(" \(cam.pos.copy().flip().toCGPoint()) ")
         //println(" \(cam.pos) ")
@@ -105,8 +110,12 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         var screenCenter:V2D = screenSize.copy().scale(0.5)
         var target:V2D = V2D.add(cam.pos, selectedCharacter.size.copy().scale(0.5).scale(cam.scale.x, cam.scale.y) ) // cam.pos // V2D.add(cam.pos, cam.target)
         target.scale(cam.scale.x, cam.scale.y)
-        var offset:V2D = V2D.sub( target, screenCenter )
-        container.position = offset.flip().toCGPoint()
+        
+//target = selectedCharacter.pos.copy().add( selectedCharacter.size.copy().scale(0.5) )
+        target = selectedCharacter.center
+        
+//        var offset:V2D =  V2D.sub( target, screenCenter )
+        container.position = screenCenter.copy().toCGPoint() //offset.flip().toCGPoint()
         //cell = grid.getCell(cam.pos.x,cam.pos.y)
         cells = grid.getCellsAbout(cam.pos.x,cam.pos.y)
         //println(cells.count)
@@ -150,12 +159,16 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
     }
     func handleEventTiltXZ(notification:NSNotification) {
         var interval:Int = notification.object as! Int
-//        println("titled XZ: \(interval)")
+        println("titled XZ: \(interval)")
         if selectedCharacter != nil {
             if 8 <= interval && interval <= 10 {
                 selectedCharacter.run()
             } else if 7 <= interval && interval <= 7 {
                 selectedCharacter.walk()
+                } else if 2 <= interval && interval <= 3 {
+                    selectedCharacter.run()
+                } else if 4 <= interval && interval <= 5 {
+                    selectedCharacter.walk()
             } else { // 9,10,11,...,0,1,..
                 selectedCharacter.still()
             }
@@ -167,9 +180,76 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
     }
     func handleEventTap(notification:NSNotification) {
         var point:V2D! = notification.object as! V2D
-//        println("tapped: \(point)")
         if selectedCharacter != nil {
-            var center:V2D = selectedCharacter.center
+            println("tapped: \(point)")
+            println("cam: \(cams[0].pos) - \(cams[0].scale)")
+            println("scene: \(scene.size) ")
+            // translate point to world coordinates:
+            //point = point.copy() .sub(Double(scene.size.width*0.5),Double(scene.size.height*0.5)) .flipY() .add(cams[0].pos)
+            point = screenPointToWorldPoint(point)
+            println("pointA: \(point)")
+            // cams[0].scale
+//            point.y = -point.y
+            
+            var pos:V2D!
+            var cell:Cell2D!
+//            var point:CGPoint!
+            var size:CGSize!
+            var centerX:CGPoint!
+            var radius:CGFloat
+            var node:SKNode!
+            var sprite:SKSpriteNode!
+            var s:SKSpriteNode!
+            var body:SKPhysicsBody!
+            var blockBG:Block2D!
+            var rows:Int = grid.rows
+            var cols:Int = grid.cols
+            var cellSize:V2D = grid.size
+            
+            
+            var fileRelative:String!
+            var fileBundle:String!
+            
+            
+            var image:UIImage!
+            fileRelative = "data/images/cloud0.png"
+            fileBundle = NSBundle.mainBundle().pathForResource(fileRelative, ofType:nil)
+            image = UIImage(contentsOfFile: fileBundle)
+            var textureAmbience0:SKTexture! = SKTexture(image:image)
+            
+            var i:Int, index:Int = 0
+            var locations:[V2D] = [ point ]
+            cellSize.set(25.0,25.0)
+            index = 0
+            for i=0; i<locations.count; ++i {
+                var loc:V2D = locations[i]
+                blockBG = Block2D()
+                blockBG.pos.set(loc.x,loc.y )
+                blockBG.size.copy(cellSize)
+                node = blockBG.displayNodeFromDisplay()
+                blockBG.attachDisplayNode(node)
+                sprite = node as! SKSpriteNode
+                sprite.texture = textureAmbience0
+                sprite.name = "point" + String(index)
+                container.addChild(node)
+                pos = blockBG.pos
+                cell = grid.getCell(pos.x,pos.y)
+                cell.addBackground(blockBG)
+                blockBG.depth = 0;//-1.0//Game2D.Z_INDEX_BACKGROUND_DEFAULT + 1.0
+                println("BLOCK: \(blockBG.display)")
+            }
+
+            
+            point = screenPointToDisplayPoint(point)
+            println("pointB: \(point)")
+            
+//            .sub( V2D(selectedCharacter.display.position) )
+            
+            var dP:V2D = V2D(selectedCharacter.display.position)
+            var dS:V2D = selectedCharacter.size
+            var dC:V2D = dP.copy().add(dS)
+            
+            var center:V2D = dC //selectedCharacter.center
             var gravity:V2D = getGravity()
             var centerToPoint:V2D = V2D.sub(point, point, center)
             var dir:V2D = centerToPoint.norm()
@@ -178,8 +258,9 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
     }
     func handleEventDoubleTap(notification:NSNotification) {
         var point:V2D! = notification.object as! V2D
-//        println("double tapped: \(point)")
         if selectedCharacter != nil {
+            point = screenPointToWorldPoint(point)
+            println("double tapped: \(point)")
             var gravity:V2D = getGravity()
             var dir:V2D = gravity.copy().flip().norm()
             selectedCharacter.jump(dir)
@@ -237,6 +318,14 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         }
 
 
+    }
+    
+    func screenPointToWorldPoint (point:V2D) -> V2D {
+        return point.copy() .sub(Double(scene.size.width*0.5),Double(scene.size.height*0.5)) .flipY() .add(cams[0].pos) // .add(cams[0].pos)
+    }
+    
+    func screenPointToDisplayPoint (point:V2D) -> V2D { // depth matters
+        return point.copy() .sub(Double(scene.size.width*0.5),Double(scene.size.height*0.5)) .flipY()
     }
     
     func setFrom(view viewUI:UIView, frame:CGRect) {
@@ -350,19 +439,25 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         // actual character
         var char:Char2D!
         char = Char2D()
-        body = char.bodyNodeFromPhysics()
         node = char.displayNodeFromDisplay()
-        node.physicsBody = body
+            node.name = "mainCharDisplay"
             sprite = node as! SKSpriteNode
             sprite.texture = textureStill0
-            node.name = "mainChar"
         char.attachDisplayNode(node)
-        char.depth = 0.0; // Game2D.Z_INDEX_MIDGROUND_DEFAULT
+container.addChild(node)
         
-        container.addChild(node)
+        body = char.bodyNodeFromPhysics()
+        node = char.physicsNodeFromDisplay()
+        char.attachPhysicsNode(node)
+        node.physicsBody = body
+            node.name = "mainCharPhysics"
+            sprite = node as! SKSpriteNode
+//            sprite.texture = textureStill0
+container.addChild(node)
+        
+        char.depth = 0.0 // Game2D.Z_INDEX_MIDGROUND_DEFAULT
         
         char.dir.set(1.0, 0.0)
-        
         
         var cell:Cell2D!
         println("char: \(char)")
@@ -373,7 +468,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         
         
         selectedCharacter = char
-        cam.target = selectedCharacter
+        //cam.target = selectedCharacter
         
 
 
@@ -401,7 +496,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         image = UIImage(contentsOfFile: fileBundle)
         var textureAmbience0:SKTexture! = SKTexture(image:image)
         
-        
+
         var blockBG:Block2D!
         var rows:Int = grid.rows
         var cols:Int = grid.cols
@@ -421,7 +516,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
                 pos = blockBG.pos
                 cell = grid.getCell(pos.x,pos.y)
                 cell.addBackground(blockBG)
-                blockBG.depth = -2.0//Game2D.Z_INDEX_BACKGROUND_DEFAULT
+                blockBG.depth = -2.0;//-2.0//Game2D.Z_INDEX_BACKGROUND_DEFAULT
                 ++index
             }
         }
@@ -442,9 +537,12 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
             pos = blockBG.pos
             cell = grid.getCell(pos.x,pos.y)
             cell.addBackground(blockBG)
-            blockBG.depth = -1.0//Game2D.Z_INDEX_BACKGROUND_DEFAULT + 1.0
+            blockBG.depth = -1.0;//-1.0//Game2D.Z_INDEX_BACKGROUND_DEFAULT + 1.0
             println("BLOCK: \(blockBG.display)")
         }
+
+        
+        
         
  /*
         // character
