@@ -36,30 +36,85 @@ class Physics2D : Block2D {
         size = nil
     }
     
-    override func process(time: NSTimeInterval, _ dt:NSTimeInterval, _ physics:SKPhysicsWorld) {
-        super.process(time, dt, physics)
+    override func process(time: NSTimeInterval, _ dt:NSTimeInterval, _ physics:SKPhysicsWorld, _ scene:SKScene2D) {
+        super.process(time, dt, physics, scene)
         updateFromDisplay()
-if (false) {
+if (true) {
         // how to tell if is on ground is not so reliable WHEN BASED ON COLLISION START / STOP
-        var height:CGFloat = 1.0
-        var dy:CGFloat = 1.0
-// THIS RECT IS IN TERMS OF ABSOLUTE POSITION ... NEED TO ANTI-TRANSFORM IT, OR USE OTHER METHOD
-// SCENE COORDINATES
-        var rect:CGRect = CGRectMake(CGFloat(pos.x),CGFloat(pos.y) - height - dy, CGFloat(size.x) , height) // correct
-        //var rect:CGRect = CGRectMake(CGFloat(pos.x+size.x),CGFloat(pos.y), height, CGFloat(size.x)) // right
-        //var rect:CGRect = CGRectMake(20,20, 10,10)
-        var body:SKPhysicsBody! = physics.bodyInRect(rect)
-        var isSame:Bool = body === self.body
-        //println("body below: \(body) | \(isSame)")
+        var height:Double = 10.0
+        var dy:Double = 1.00
+        var left:Double = pos.x
+        var right:Double = left + size.x
+        var bot:Double = pos.y - height - dy
+        var top:Double = bot + height
+        // var rect:CGRect = CGRectMake(CGFloat(left), CGFloat(bot), CGFloat(right-left) , CGFloat(top-bot))
+    
+    left = 0
+    right = 10
+    top = 10
+    bot = 0
+    
+    left = 0
+    right = 10
+    top = 100
+    bot = 55
+    // (0.0, 55.0, 10.0, 45.0)
+    // (0.0, 0.825000524520874, 20.0, 40.0)
+    // Optional((0.0, 0.825000524520874, 20.0, 40.0))
+    
+    var frame:CGRect = CGRectMake(CGFloat(left), CGFloat(bot), CGFloat(right-left) , CGFloat(top-bot))
+    
+        //var frame = self.physics.frame
+        //frame.size.height = 100.0
+        //frame.origin.y += frame.size.height + 1.01 // if +y points down ------ NO
+        //frame.origin.y -= frame.size.height - 1.01 // if +y points up ------ NO
+   // frame.origin.y -= frame.size.height + 0.01
+    //frame.origin = self.physics.parent!.convertPoint(frame.origin, toNode:scene);
+        frame.origin = self.physics.parent!.convertPoint(frame.origin, toNode:scene);
+    
+        var body:SKPhysicsBody! = physics.bodyInRect(frame)
+    
+        //var rect:CGRect = CGRectMake(CGFloat(left), CGFloat(bot), CGFloat(right-left) , CGFloat(top-bot))
+        //var body:SKPhysicsBody! = physics.bodyInRect(rect)
+        var isSame:Bool = body != nil && (body == self.body)
+    
+    //var c:Char2D! = self as! Char2D
+    var isChar:Bool = self is Char2D
+    if isChar {
+        var c:Char2D! = self as! Char2D
+        println("body below: \(body) | \(isSame) .... \(frame)")
+        
+        
+        
+        physics.enumerateBodiesInRect(frame, usingBlock: { (body:SKPhysicsBody!, stop:UnsafeMutablePointer<ObjCBool>) -> Void in
+            if body != nil && body.node != nil{
+                println("       - body: \(body.node?.name) : \(body.node?.frame) ")
+            }
+        })
+        
+        
+        
+        /*physics.enumerateBodiesInRect(frame, usingBlock: { (body:SKPhysicsBody!, stop:UnsafePointer<ObjCBool>) -> Void in
+            println("       - body: \(body)")
+        })*/
+//        physics.enumerateBodiesInRect(frame) {
+//            (body: SKPhysicsBody!, stop: UnsafePointer<ObjCBool>) in
+//            println("       - body: \(body)")
+//        }
+
+    }
         if body == nil {
             //
         } else if body === self.body {
             body = nil
         }
         var isBodyBelow:Bool = body != nil
-        println("touching ground: \(body) \(isBodyBelow)")
+//        println("touching ground: \(body) \(isBodyBelow)")
         inAir = !isBodyBelow
 }
+//        inAir = false
+        //vel.set( Double(physics.physicsBody!.velocity.dx), Double(physics.physicsBody!.velocity.dy) )
+        pos.set( Double(self.physics.position.x), Double(self.physics.position.y) )
     }
     
     internal func handleLanded() {
@@ -71,6 +126,7 @@ if (false) {
     
     override func handleCollisionStart(gravity:V2D!, _ normal:V2D!, _ obj:Obj2D!) {
         super.handleCollisionStart(gravity, normal, obj)
+        /*
         println("START------------------------ \(gravity) \(normal)")
         if inAir {
             var angle:Double = V2D.angle(gravity,normal)
@@ -96,9 +152,11 @@ if (false) {
                 handleLanded()
             }
         }
+        */
     }
     override func handleCollisionEnd(gravity:V2D!, _ normal:V2D!, _ obj:Obj2D!) {
         super.handleCollisionEnd(gravity, normal, obj)
+        /*
         println("END------------------------ \(gravity) \(normal)")
         if !inAir {
             var angle:Double = V2D.angle(gravity,normal)
@@ -108,6 +166,7 @@ if (false) {
                 handleAirborne()
             }
         }
+        */
     }
     
     func bodyNodeFromPhysics() -> SKPhysicsBody! {
@@ -115,12 +174,16 @@ if (false) {
         var center:CGPoint
         center = CGPointMake( CGFloat(size.x*0.5), CGFloat(size.y*0.5) )
         if circular {
+            println("PHYSICS CIRCULAR")
             var avg:CGFloat = CGFloat((size.x+size.y)*0.5)
             body = SKPhysicsBody(circleOfRadius:avg, center:center)
         } else {
+            println("PHYSICS RECTANGULAR")
             body = SKPhysicsBody(rectangleOfSize:CGSizeMake(CGFloat(size.x),CGFloat(size.y)), center:center)
         }
         body.contactTestBitMask = Game2D.PHYSICS_CONTACT_BIT_MASK_ANY
+        body.categoryBitMask = Game2D.PHYSICS_CATEGORY_BIT_MASK_ANY
+        body.collisionBitMask = Game2D.PHYSICS_COLLISION_BIT_MASK_ANY
         body.dynamic = dynamic
         body.allowsRotation = rotates
         body.friction = CGFloat(friction)

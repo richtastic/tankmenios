@@ -26,7 +26,7 @@ class Obj2D : Printable {
     func render(time:NSTimeInterval, _ cam:Cam2D, _ gravity:V2D) {
         //
     }
-    func process(time:NSTimeInterval, _ dt:NSTimeInterval, _ physics:SKPhysicsWorld){
+    func process(time:NSTimeInterval, _ dt:NSTimeInterval, _ physics:SKPhysicsWorld, _ scene:SKScene2D){
         //
     }
     

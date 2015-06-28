@@ -98,7 +98,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         var dt:Double = 1.0/60.0
         // move camera toward object
         cam.target = selectedCharacter
-        cam.process(currentTime, dt, physics)
+        cam.process(currentTime, dt, physics, scene)
         //println(" \(cam.pos.copy().flip().toCGPoint()) ")
         //println(" \(cam.pos) ")
         var scale:Double = 1.0 //0.5
@@ -110,12 +110,9 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         var screenCenter:V2D = screenSize.copy().scale(0.5)
         var target:V2D = V2D.add(cam.pos, selectedCharacter.size.copy().scale(0.5).scale(cam.scale.x, cam.scale.y) ) // cam.pos // V2D.add(cam.pos, cam.target)
         target.scale(cam.scale.x, cam.scale.y)
-        
-//target = selectedCharacter.pos.copy().add( selectedCharacter.size.copy().scale(0.5) )
         target = selectedCharacter.center
         
-//        var offset:V2D =  V2D.sub( target, screenCenter )
-        container.position = screenCenter.copy().toCGPoint() //offset.flip().toCGPoint()
+//        container.position = screenCenter.copy().toCGPoint() //offset.flip().toCGPoint()
         //cell = grid.getCell(cam.pos.x,cam.pos.y)
         cells = grid.getCellsAbout(cam.pos.x,cam.pos.y)
         //println(cells.count)
@@ -125,13 +122,13 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
             //println(cell)
             dyns = cell.dynamics
             for dyn in dyns {
-                dyn.process(currentTime, dt, physics)
+                dyn.process(currentTime, dt, physics, scene)
                 // possibly move cells ...
             }
             objs = cell.statics
             //println("objs: \(objs)")
             for obj in objs {
-                obj.process(currentTime, dt, physics)
+                obj.process(currentTime, dt, physics, scene)
             }
             // ...
         }
@@ -185,15 +182,12 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
             println("cam: \(cams[0].pos) - \(cams[0].scale)")
             println("scene: \(scene.size) ")
             // translate point to world coordinates:
-            //point = point.copy() .sub(Double(scene.size.width*0.5),Double(scene.size.height*0.5)) .flipY() .add(cams[0].pos)
-            point = screenPointToWorldPoint(point)
-            println("pointA: \(point)")
-            // cams[0].scale
-//            point.y = -point.y
+            var objDepth:Double = 0 // -1.0 //Game2D.Z_INDEX_BACKGROUND_DEFAULT + 1.0
+            var worldPoint:V2D = screenPointToWorldPoint(point, objDepth)
+            println("pointA: \(worldPoint)")
             
             var pos:V2D!
             var cell:Cell2D!
-//            var point:CGPoint!
             var size:CGSize!
             var centerX:CGPoint!
             var radius:CGFloat
@@ -206,10 +200,8 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
             var cols:Int = grid.cols
             var cellSize:V2D = grid.size
             
-            
             var fileRelative:String!
             var fileBundle:String!
-            
             
             var image:UIImage!
             fileRelative = "data/images/cloud0.png"
@@ -218,7 +210,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
             var textureAmbience0:SKTexture! = SKTexture(image:image)
             
             var i:Int, index:Int = 0
-            var locations:[V2D] = [ point ]
+            var locations:[V2D] = [ worldPoint ]
             cellSize.set(25.0,25.0)
             index = 0
             for i=0; i<locations.count; ++i {
@@ -232,18 +224,16 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
                 sprite.texture = textureAmbience0
                 sprite.name = "point" + String(index)
                 container.addChild(node)
+//scene.addChild(node)
                 pos = blockBG.pos
                 cell = grid.getCell(pos.x,pos.y)
                 cell.addBackground(blockBG)
-                blockBG.depth = 0;//-1.0//Game2D.Z_INDEX_BACKGROUND_DEFAULT + 1.0
+                blockBG.depth = objDepth;
                 println("BLOCK: \(blockBG.display)")
             }
-
             
-            point = screenPointToDisplayPoint(point)
+            point = worldPoint.copy()//screenPointToDisplayPoint(point)
             println("pointB: \(point)")
-            
-//            .sub( V2D(selectedCharacter.display.position) )
             
             var dP:V2D = V2D(selectedCharacter.display.position)
             var dS:V2D = selectedCharacter.size
@@ -263,6 +253,32 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
             println("double tapped: \(point)")
             var gravity:V2D = getGravity()
             var dir:V2D = gravity.copy().flip().norm()
+            
+//            if (true) {
+//                var height:Double = 10.0
+//                var dy:Double = 0.01
+//                var left:Double = pos.x
+//                var right:Double = left + size.x
+//                var bot:Double = pos.y - height
+//                var top:Double = bot + height
+//                // var rect:CGRect = CGRectMake(CGFloat(left), CGFloat(bot), CGFloat(right-left) , CGFloat(top-bot))
+//                
+//                
+//                
+//                var rect:CGRect = CGRectMake(CGFloat(left), CGFloat(bot), CGFloat(right-left) , CGFloat(top-bot))
+//                var body:SKPhysicsBody! = physics.bodyInRect(rect)
+//                var isSame:Bool = body === self.body
+//                println("body below: \(body) | \(isSame)")
+//                if body == nil {
+//                    //
+//                } else if body === self.body {
+//                    body = nil
+//                }
+//                var isBodyBelow:Bool = body != nil
+//                //        println("touching ground: \(body) \(isBodyBelow)")
+//                inAir = !isBodyBelow
+//            }
+//            
             selectedCharacter.jump(dir)
         }
     }
@@ -320,15 +336,12 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
 
     }
     
-    func screenPointToWorldPoint (point:V2D) -> V2D {
-        return point.copy() .sub(Double(scene.size.width*0.5),Double(scene.size.height*0.5)) .flipY() .add(cams[0].pos) // .add(cams[0].pos)
+    func screenPointToWorldPoint (_ inPoint:V2D! = nil, _ depth:Double = 0.0) -> V2D {
+        var screenPoint:V2D = inPoint.copy() .sub(Double(scene.size.width*0.5),Double(scene.size.height*0.5)) .flipY()
+        return Cam2D.displayPointToWorldPoint(cams[selectedCam], depth, screenPoint)
     }
     
-    func screenPointToDisplayPoint (point:V2D) -> V2D { // depth matters
-        return point.copy() .sub(Double(scene.size.width*0.5),Double(scene.size.height*0.5)) .flipY()
-    }
-    
-    func setFrom(view viewUI:UIView, frame:CGRect) {
+    func setFrom(view viewUI:UIView, frame:CGRect) -> Void {
         // view
         self.viewUI = viewUI
         view.frame = frame
@@ -348,18 +361,18 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         // start
         setPlay()
     }
-    func setPaused() {
+    func setPaused() -> Void {
         isPlaying = false
         scene.physicsWorld.speed = 0.0
         input.stop()
     }
-    func setPlay() {
+    func setPlay() -> Void {
         isPlaying = true
         scene.physicsWorld.speed = 1.0
         scene.physicsWorld.contactDelegate = self
         input.play()
     }
-    func addCam(cam:Cam2D!=nil) {
+    func addCam(cam:Cam2D!=nil) -> Void {
         cams.append(cam)
         if selectedCam < 0 {
             selectedCam = 0
@@ -369,7 +382,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         var gravity:V2D = V2D(scene.physicsWorld.gravity)
         return gravity
     }
-    func defaultStuff() {
+    func defaultStuff() -> Void {
         var i:Int, j:Int, index:Int
         var obj:Obj2D!
         var cam:Cam2D!
@@ -445,6 +458,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
             sprite.texture = textureStill0
         char.attachDisplayNode(node)
 container.addChild(node)
+//scene.addChild(node)
         
         body = char.bodyNodeFromPhysics()
         node = char.physicsNodeFromDisplay()
@@ -454,6 +468,7 @@ container.addChild(node)
             sprite = node as! SKSpriteNode
 //            sprite.texture = textureStill0
 container.addChild(node)
+//scene.addChild(node)
         
         char.depth = 0.0 // Game2D.Z_INDEX_MIDGROUND_DEFAULT
         
@@ -481,7 +496,8 @@ container.addChild(node)
         node = SKNode2D()
         node.name = "floor"
         node.physicsBody = body
-        container.addChild(node)
+container.addChild(node)
+//scene.addChild(node)
         
         
         // BG objects
@@ -512,7 +528,8 @@ container.addChild(node)
                 sprite = node as! SKSpriteNode
                 sprite.texture = texturePattern0
                 sprite.name = "blockBG" + String(index)
-                container.addChild(node)
+container.addChild(node)
+//scene.addChild(node)
                 pos = blockBG.pos
                 cell = grid.getCell(pos.x,pos.y)
                 cell.addBackground(blockBG)
@@ -533,7 +550,8 @@ container.addChild(node)
             sprite = node as! SKSpriteNode
             sprite.texture = textureAmbience0
             sprite.name = "blockMG" + String(index)
-            container.addChild(node)
+container.addChild(node)
+//scene.addChild(node)
             pos = blockBG.pos
             cell = grid.getCell(pos.x,pos.y)
             cell.addBackground(blockBG)
@@ -541,7 +559,63 @@ container.addChild(node)
             println("BLOCK: \(blockBG.display)")
         }
 
+        // obstacles
+        locations = [ V2D(25,50), V2D(100,150) ]
+        cellSize.set(40.0,30.0)
+        index = 0
+        for i=0; i<locations.count; ++i {
+break;
+            var loc:V2D = locations[i]
+            var phys = Physics2D()
+            phys.rotates = true
+            phys.pos.set(loc.x,loc.y)
+            phys.size.copy(cellSize)
+            node = phys.displayNodeFromDisplay()
+            phys.attachDisplayNode(node)
+                sprite = node as! SKSpriteNode
+                sprite.texture = textureStill0
+                sprite.name = "obstacle" + String(i)
+container.addChild(node)
+//scene.addChild(node)
+            
+            body = phys.bodyNodeFromPhysics()
+            node = phys.physicsNodeFromDisplay()
+            phys.attachPhysicsNode(node)
+            node.physicsBody = body
+            node.name = "obstaclePhysics" + String(i)
+            //    sprite = node as! SKSpriteNode
+            //    sprite.texture = textureStill0
+container.addChild(node)
+//scene.addChild(node)
+            
+            pos = phys.pos
+            cell = grid.getCell(pos.x,pos.y)
+            cell.addDynamic(phys)
+            phys.depth = 0.0;//-1.0//Game2D.Z_INDEX_BACKGROUND_DEFAULT + 1.0
+            println("OBSTACLE: \(phys.display)")
+        }
+/*
+        var char:Char2D!
+        char = Char2D()
+        node = char.displayNodeFromDisplay()
+        node.name = "mainCharDisplay"
+        sprite = node as! SKSpriteNode
+        sprite.texture = textureStill0
+        char.attachDisplayNode(node)
+        container.addChild(node)
+        //scene.addChild(node)
         
+        body = char.bodyNodeFromPhysics()
+        node = char.physicsNodeFromDisplay()
+        char.attachPhysicsNode(node)
+        node.physicsBody = body
+        node.name = "mainCharPhysics"
+        sprite = node as! SKSpriteNode
+        //            sprite.texture = textureStill0
+        container.addChild(node)
+        //scene.addChild(node)
+        
+*/
         
         
  /*

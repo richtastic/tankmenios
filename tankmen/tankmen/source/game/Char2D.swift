@@ -61,13 +61,9 @@ class Char2D : Physics2D {
         // dir: flip x/y if necessary
         // size: static?
         // inAir: floating y/n
-        
-//        println("POS: \(pos) - \(physics.position) - \(display.position)")
-        var ppp:V2D = V2D(pos.x - cam.pos.x, pos.y - cam.pos.y)
-//        println("RENDER: \(pos) - \(cam.pos) = \(ppp)")
     }
-    override func process(time:NSTimeInterval, _ dt:NSTimeInterval, _ world:SKPhysicsWorld){
-        super.process(time, dt, world)
+    override func process(time:NSTimeInterval, _ dt:NSTimeInterval, _ world:SKPhysicsWorld, _ scene:SKScene2D){
+        super.process(time, dt, world, scene)
         var velocity:CGVector! = physics.physicsBody?.velocity
         var vel:V2D = V2D(velocity)
         var desiredVelocity:V2D = dir.copy().setLength(desiredSpeed)
@@ -86,8 +82,6 @@ class Char2D : Physics2D {
 //            vel.scale(mass)
 //            body.applyForce( vel.toCGVector() )
         }
-pos.set( Double(physics.position.x), Double(physics.position.y) )
-//vel.set( Double(physics.physicsBody!.velocity.dx), Double(physics.physicsBody!.velocity.dy) )
     }
     override internal func handleLanded() {
         super.handleLanded()
