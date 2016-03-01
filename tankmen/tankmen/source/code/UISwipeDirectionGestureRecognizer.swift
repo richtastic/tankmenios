@@ -54,9 +54,9 @@ class UISwipeDirectionGestureRecognizer: UIGestureRecognizer {
         }
     }
     
-    override func touchesBegan(touches: Set<NSObject>!, withEvent event: UIEvent!) {
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent) {
         self.reset()
-        if let touch = touches.first as? UITouch {
+        if let touch = touches.first as UITouch! {
             var point:CGPoint = touch.locationInView(view)
             currentStart = point
             initialTimeStamp = touch.timestamp
@@ -64,14 +64,14 @@ class UISwipeDirectionGestureRecognizer: UIGestureRecognizer {
         }
     }
     
-    override func touchesMoved(touches: Set<NSObject>!, withEvent event: UIEvent!) {
+    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent) {
         if self.state != .Possible {
             return;
         }
-        if let touch = touches.first as? UITouch {
+        if let touch = touches.first as UITouch! {
             currentTimeStamp = touch.timestamp
             var point:CGPoint = touch.locationInView(view)
-            var distance:CGFloat = CGPointDistance(currentStart, point);
+            var distance:CGFloat = CGPointDistance(currentStart, b: point);
             currentEnd = point
             // delta time check
             var dt = currentTimeStamp - initialTimeStamp
@@ -81,12 +81,12 @@ class UISwipeDirectionGestureRecognizer: UIGestureRecognizer {
             }
             // initial direction check
             if distance > 0 {
-                currentDirection = CGPointNormal( CGPointSub(currentEnd, currentStart) )
+                currentDirection = CGPointNormal( CGPointSub(currentEnd, b: currentStart) )
                 if initialDirection==CGPointZero {
                     initialDirection = currentDirection
                 }
                 // angle tolerance check
-                var angle:CGFloat = CGPointAngle(initialDirection, currentDirection)
+                var angle:CGFloat = CGPointAngle(initialDirection, b: currentDirection)
                 //println("distance: \(distance) ... angle: \(angle) ... init: \(initialDirection) / curr: \(currentDirection) ..")
                 if angle > maxAngleTolerance {
                     self.state = .Failed
@@ -102,11 +102,11 @@ class UISwipeDirectionGestureRecognizer: UIGestureRecognizer {
         }
     }
     
-    override func touchesEnded(touches: Set<NSObject>!, withEvent event: UIEvent!) {
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent) {
         self.reset()
     }
     
-    override func touchesCancelled(touches: Set<NSObject>!, withEvent event: UIEvent!) {
+    override func touchesCancelled(touches: Set<UITouch>, withEvent event: UIEvent) {
         self.reset()
     }
     

@@ -17,7 +17,7 @@ class TNKMainMenuController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         view.backgroundColor = UIColor.blueColor()
-        print("TNKMainMenuController")
+        print("TNKMainMenuController", terminator: "")
     }
 
     override func didReceiveMemoryWarning() {

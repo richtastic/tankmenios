@@ -2,7 +2,7 @@
 
 import Foundation
 
-class Level2D : Printable {
+class Level2D : CustomStringConvertible {
     var grid:Grid2D!
     var description:String {
         get {

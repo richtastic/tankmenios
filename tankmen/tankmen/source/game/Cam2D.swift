@@ -30,44 +30,44 @@ class Cam2D : Obj2D {
     }
     func followTarget() {
         if target != nil {
-            var diff:V2D = V2D.sub(target.pos, pos)
-            var percent:Double = 0.1
+            let diff:V2D = V2D.sub(target.pos, pos)
+            let percent:Double = 0.1
             pos.set( pos.x + diff.x*percent, pos.y + diff.y*percent )
         }
     }
     
     static func displayPointToWorldPoint(_ cam:Cam2D! = nil, _ depth:Double = 0, _ screenPoint:V2D! = nil) -> V2D { // screen point from camera projection origin
-        var diffZ = cam.depth - depth
-        var scale = ( cam.displayScale * cam.focalLength ) / ( diffZ )
-        var newX = screenPoint.x/scale
-        var newY = screenPoint.y/scale
-        var worldPoint:V2D! = V2D(newX + cam.pos.x, newY + cam.pos.y)
+        let diffZ = cam.depth - depth
+        let scale = ( cam.displayScale * cam.focalLength ) / ( diffZ )
+        let newX = screenPoint.x/scale
+        let newY = screenPoint.y/scale
+        let worldPoint:V2D! = V2D(newX + cam.pos.x, newY + cam.pos.y)
         return worldPoint;
     }
     
     static func worldPointToDisplayPoint(_ cam:Cam2D! = nil, _ depth:Double = 0, _ worldPoint:V2D! = nil) -> V2D! {
-        var diffX:Double = worldPoint.x - cam.pos.x
-        var diffY:Double = worldPoint.y - cam.pos.y
-        var diffZ:Double = cam.depth - depth
+        let diffX:Double = worldPoint.x - cam.pos.x
+        let diffY:Double = worldPoint.y - cam.pos.y
+        let diffZ:Double = cam.depth - depth
         var newX:Double = 0.0
         var newY:Double = 0.0
         if diffZ != 0 {
-            var scale:Double = ( cam.displayScale * cam.focalLength ) / ( diffZ )
+            let scale:Double = ( cam.displayScale * cam.focalLength ) / ( diffZ )
             if scale > 0 {
                 newX = diffX*scale
                 newY = diffY*scale
             }
         }
-        var screenPoint:V2D! = V2D(newX, newY)
+        let screenPoint:V2D! = V2D(newX, newY)
         return screenPoint;
     }
     
     static func renderDisplayBlock(_ cam:Cam2D! = nil, _ block:Block2D! = nil) -> Void {
-        var display:SKNode! = block.display
+        let display:SKNode! = block.display
         if display !== nil {
             var newX:Double = 0.0
             var newY:Double = 0.0
-            var dis:V2D! = worldPointToDisplayPoint(cam, block.depth, block.pos)
+            let dis:V2D! = worldPointToDisplayPoint(cam, block.depth, block.pos)
             if dis != nil {
                 newX = dis.x
                 newY = dis.y

@@ -5,13 +5,13 @@ import UIKit
 class TNKContentNavigationController: UINavigationController {
     
     required
-    init(coder aDecoder: NSCoder) {
+    init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
     override
     init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
-        print("did init")
+        print("did init", terminator: "")
         var a:String?
         var b:NSBundle?
         a = nibNameOrNil
@@ -21,7 +21,7 @@ class TNKContentNavigationController: UINavigationController {
     }
     
     init() {
-        print("did init 2\n")
+        print("did init 2\n", terminator: "")
         super.init(nibName: nil, bundle: nil)
         //super.init()
         self.navigationBar.hidden = true

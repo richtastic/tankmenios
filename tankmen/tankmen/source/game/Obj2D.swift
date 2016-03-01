@@ -3,7 +3,7 @@
 import UIKit
 import SpriteKit
 
-class Obj2D : Printable {
+class Obj2D : CustomStringConvertible {
     var pos:V2D! // position
     var vel:V2D! // velocity
     var dir:V2D! // normal direction (rotation)

@@ -12,7 +12,7 @@ class TNKGameController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         view.backgroundColor = UIColor.greenColor()
-        println("TNKGameController")
+        print("TNKGameController")
 
         // game
         resetGame()
@@ -37,15 +37,15 @@ class TNKGameController: UIViewController {
         return true
     }
     override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {
-        var fromInterfaceOrientation:UIInterfaceOrientation = UIApplication.sharedApplication().statusBarOrientation
-        println("will rotate from: \(fromInterfaceOrientation) to: \(toInterfaceOrientation)")
-        var rect:CGRect = CGRect(x:0,y:0,width:self.view.frame.size.height,height:self.view.frame.size.width)
+        let fromInterfaceOrientation:UIInterfaceOrientation = UIApplication.sharedApplication().statusBarOrientation
+        print("will rotate from: \(fromInterfaceOrientation) to: \(toInterfaceOrientation)")
+        let rect:CGRect = CGRect(x:0,y:0,width:self.view.frame.size.height,height:self.view.frame.size.width)
         self.updateLayout(rect)
     }
     
     override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
-        var toInterfaceOrientation:UIInterfaceOrientation = UIApplication.sharedApplication().statusBarOrientation
-        println("did rotate  from: \(fromInterfaceOrientation) to: \(toInterfaceOrientation)")
+        let toInterfaceOrientation:UIInterfaceOrientation = UIApplication.sharedApplication().statusBarOrientation
+        print("did rotate  from: \(fromInterfaceOrientation) to: \(toInterfaceOrientation)")
         self.updateLayout(nil)
     }
     func updateLayout(var rect:CGRect!) {

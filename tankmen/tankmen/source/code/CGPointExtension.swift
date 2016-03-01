@@ -13,7 +13,7 @@ func CGPointLength(a:CGPoint) -> CGFloat {
 }
 
 func CGPointNormal(a:CGPoint) -> CGPoint {
-    var length = CGPointLength(a)
+    let length = CGPointLength(a)
     if length>0 {
         return CGPointMake(a.x/length, a.y/length)
     }
@@ -36,7 +36,7 @@ func CGPointAngle(a:CGPoint, b:CGPoint) -> CGFloat {
     var lenA = CGPointLength(a)
     var lenB = CGPointLength(b)
     if (lenA != 0 && lenB != 0) {
-        var dot = CGPointDot(a,b)
+        var dot = CGPointDot(a,b: b)
         var lenAB = lenA*lenB
         return acos( max( min(dot/lenAB, 1.0), -1.0 ) )
     }

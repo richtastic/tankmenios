@@ -64,17 +64,17 @@ class Char2D : Physics2D {
     }
     override func process(time:NSTimeInterval, _ dt:NSTimeInterval, _ world:SKPhysicsWorld, _ scene:SKScene2D){
         super.process(time, dt, world, scene)
-        var velocity:CGVector! = physics.physicsBody?.velocity
-        var vel:V2D = V2D(velocity)
+        let velocity:CGVector! = physics.physicsBody?.velocity
+        let vel:V2D = V2D(velocity)
         var desiredVelocity:V2D = dir.copy().setLength(desiredSpeed)
-        var speedInDir:Double = V2D.dot(vel,dir)
+        let speedInDir:Double = V2D.dot(vel,dir)
         if speedInDir < desiredSpeed { // increment velocity
-            var diffVel:Double = desiredSpeed - speedInDir
+            let diffVel:Double = desiredSpeed - speedInDir
             var incSpeed:Double = Char2D.SPEED_INCREMENT_GND
             if inAir {
                 incSpeed = Char2D.SPEED_INCREMENT_AIR
             }
-            var incVel:V2D = dir.copy().setLength( min(incSpeed,diffVel) )
+            let incVel:V2D = dir.copy().setLength( min(incSpeed,diffVel) )
             // SET VELOCITY
             V2D.add(vel, vel, incVel)
             body.velocity = vel.toCGVector()
@@ -136,12 +136,12 @@ class Char2D : Physics2D {
         updateDesiredSpeedFromState()
     }
     func jump(dir:V2D) {
-        println("JUMP?")
+        print("JUMP?")
         if !inAir {
-            var len:Double = Char2D.SPEED_JUMP
-            var jmp:V2D = dir.copy().setLength(len)
-            println("JUMP: \(jmp)")
-            var vel:V2D = V2D(body.velocity)
+            let len:Double = Char2D.SPEED_JUMP
+            let jmp:V2D = dir.copy().setLength(len)
+            print("JUMP: \(jmp)")
+            let vel:V2D = V2D(body.velocity)
             // SET VELOCITY
             V2D.add(vel,vel,jmp)
             body.velocity = vel.toCGVector()
@@ -150,17 +150,17 @@ class Char2D : Physics2D {
             //jmp.scale(mass)
             //body.applyImpulse( jmp.toCGVector() )
         } else {
-            println("IN AIR")
+            print("IN AIR")
         }
     }
     func aim(gravity:V2D, _ dir:V2D) {
-        println("aim: \(dir)")
+        print("aim: \(dir)")
         self.aim = dir // upper-body goto aim direction
         //var cen:V2D = center
-        var right:V2D = gravity.rotate(M_PI*0.5)
-        var left:V2D = right.copy().flip()
+        let right:V2D = gravity.rotate(M_PI*0.5)
+        let left:V2D = right.copy().flip()
         // full-body go to direction
-        var dot:Double = V2D.dot(dir, right)
+        let dot:Double = V2D.dot(dir, right)
         if dot >= 0.0 {
             self.dir.copy(right)
         } else {

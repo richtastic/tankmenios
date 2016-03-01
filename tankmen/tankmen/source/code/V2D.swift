@@ -3,7 +3,7 @@
 import Foundation
 import UIKit
 
-class V2D : Printable {
+class V2D : CustomStringConvertible {
     static let V2DZero:V2D = V2D(0,0)
     static let V2DDIRX:V2D = V2D(1,0)
     static let V2DDIRY:V2D = V2D(0,1)
@@ -36,8 +36,8 @@ class V2D : Printable {
         set(x,y)
     }
     convenience init (_ vector:CGVector) {
-        var x:Double = Double( vector.dx )
-        var y:Double = Double( vector.dy )
+        let x:Double = Double( vector.dx )
+        let y:Double = Double( vector.dy )
         self.init( x, y )
     }
     convenience init (_ point:CGPoint) {
@@ -51,11 +51,11 @@ class V2D : Printable {
         _y = 0.0
     }
     func toCGVector() -> CGVector {
-        var vector:CGVector = CGVectorMake( CGFloat(_x) , CGFloat(_y) )
+        let vector:CGVector = CGVectorMake( CGFloat(_x) , CGFloat(_y) )
         return vector
     }
     func toCGPoint() -> CGPoint {
-        var vector:CGPoint = CGPointMake( CGFloat(_x) , CGFloat(_y) )
+        let vector:CGPoint = CGPointMake( CGFloat(_x) , CGFloat(_y) )
         return vector
     }
     func set(_ x:Double=0.0, _ y:Double=0.0) {
@@ -64,7 +64,7 @@ class V2D : Printable {
     }
     func copy(_ v:V2D! = nil) -> V2D {
         if v == nil {
-            var cpy:V2D = V2D(_x,_y)
+            let cpy:V2D = V2D(_x,_y)
             return cpy
         }
         set(v.x, v.y)
@@ -74,7 +74,7 @@ class V2D : Printable {
         return sqrt(_x*_x + _y*_y)
     }
     func norm() -> V2D {
-        var length = self.length()
+        let length = self.length()
         if length > 0.0 {
             _x /= length
             _y /= length
@@ -82,10 +82,10 @@ class V2D : Printable {
         return self
     }
     func rotate(angle:Double) -> V2D {
-        var co:Double = cos(angle)
-        var si:Double = sin(angle)
-        var x:Double = _x*co - _y*si
-        var y:Double = _x*si + _y*co
+        let co:Double = cos(angle)
+        let si:Double = sin(angle)
+        let x:Double = _x*co - _y*si
+        let y:Double = _x*si + _y*co
         set(x,y)
         return self
     }
@@ -98,7 +98,7 @@ class V2D : Printable {
         return self
     }
     func setLength(len:Double) -> V2D {
-        var l:Double = length()
+        let l:Double = length()
         set( _x*len/l, _y*len/l )
         return self
     }
@@ -131,16 +131,16 @@ class V2D : Printable {
         return a.x*b.y-a.y*b.x
     }
     static func angle(_ a:V2D!=nil, _ b:V2D!=nil) -> Double {
-        var lenA:Double = a.length()
-        var lenB:Double = b.length()
+        let lenA:Double = a.length()
+        let lenB:Double = b.length()
         if lenA != 0.0 && lenB != 0.0 {
             return acos( max( min( dot(a,b)/(lenA*lenB),1.0 ), -1.0) )
         }
         return 0.0
     }
     static func angleDirection(_ a:V2D! = nil, _ b:V2D! = nil) -> Double {
-        var ang:Double = angle(a,b)
-        var crs:Double = cross(a,b)
+        let ang:Double = angle(a,b)
+        let crs:Double = cross(a,b)
         if crs >= 0.0 {
             return ang
         }

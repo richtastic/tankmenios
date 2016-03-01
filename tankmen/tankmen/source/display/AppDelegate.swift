@@ -19,13 +19,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         
         //var controller = ViewController()
-        var controller = TNKContentNavigationController()
+        let controller = TNKContentNavigationController()
         window?.rootViewController = controller
 
         
-        var mainMenu = TNKMainMenuController()
+        let mainMenu = TNKMainMenuController()
         controller.pushViewController(mainMenu, animated:false)
-        var gamePlay = TNKGameController()
+        let gamePlay = TNKGameController()
         controller.pushViewController(gamePlay, animated:true)
         
         return true

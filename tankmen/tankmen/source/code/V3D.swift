@@ -41,7 +41,7 @@ class V3D : V2D {
         return sqrt(_x*_x + _y*_y + _z*_z)
     }
     override func norm() -> V3D {
-        var length = self.length()
+        let length = self.length()
         if length > 0.0 {
             _x /= length
             _y /= length
@@ -54,7 +54,7 @@ class V3D : V2D {
         return a.x*b.x + a.y*b.y + a.z*b.z
     }
     static func norm(a:V3D) -> V3D {
-        var b:V3D = V3D(a.x,a.y,a.z)
+        let b:V3D = V3D(a.x,a.y,a.z)
         b.norm()
         return b
     }
@@ -62,8 +62,8 @@ class V3D : V2D {
         return sqrt( pow(a.x-b.x,2) + pow(a.y-b.y,2) + pow(a.z-b.z,2) )
     }
     static func angle(a:V3D, _ b:V3D) -> Double{
-        var lenA = a.length()
-        var lenB = b.length()
+        let lenA = a.length()
+        let lenB = b.length()
         if (lenA != 0.0 && lenB != 0.0) {
             return acos( max( min( V3D.dot(a,b) / (lenA*lenB), 1.0 ),-1.0) )
         }

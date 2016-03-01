@@ -30,7 +30,7 @@ class Block2D : Obj2D {
     }
     override var description:String {
         get {
-            var end:V2D = self.end
+            let end:V2D = self.end
             return "[Block2D X: \(pos.x)->\(end.x), Y: \(pos.y)->\(end.y)]"
         }
     }
@@ -54,9 +54,9 @@ class Block2D : Obj2D {
         var node:SKSpriteNode2D!
         node = SKSpriteNode2D()
         
-        var siz:CGSize = CGSize(width: size.x, height:size.y)
+        let siz:CGSize = CGSize(width: size.x, height:size.y)
         var center:CGPoint = CGPoint(x: size.x*0.5, y: size.y*0.5)
-        var position:CGPoint = CGPoint(x: pos.x, y:pos.y )
+        let position:CGPoint = CGPoint(x: pos.x, y:pos.y )
         node.position = position
         node.anchorPoint = CGPoint(x:0, y:0)
         node.size = siz

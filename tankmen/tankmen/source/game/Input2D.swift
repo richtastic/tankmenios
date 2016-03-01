@@ -116,7 +116,7 @@ class Input2D { //: NSObject {
     func startTimer() {
         stopTimer()
         var loop:NSRunLoop = NSRunLoop.mainRunLoop()
-        var interval:NSTimeInterval = _frameRate
+        let interval:NSTimeInterval = _frameRate
         //timer = NSTimer(timeInterval: interval, target:self, selector:"timerTrigger:", userInfo:nil, repeats: false)
         //loop.addTimer(timer, forMode:NSDefaultRunLoopMode)
         //loop.addTimer(timer, forMode:NSRunLoopCommonModes)
@@ -136,7 +136,7 @@ class Input2D { //: NSObject {
     }
 // ----------------------------------------------------------------------------------------------------------------------------------------
     func alertAll(name:String, object:AnyObject!=nil) {
-        var notification:NSNotification = NSNotification(name:name, object:object)
+        let notification:NSNotification = NSNotification(name:name, object:object)
         dispatch.postNotification(notification)
     }
 // ----------------------------------------------------------------------------------------------------------------------------------------
@@ -159,17 +159,20 @@ class Input2D { //: NSObject {
         //            println("Y = \(data.acceleration.y)")
         //            println("Z = \(data.acceleration.z)")
         //        })
-        motionManager.startAccelerometerUpdatesToQueue(NSOperationQueue.mainQueue(), withHandler:handleAccelerationUpdate)
+        motionManager.startAccelerometerUpdatesToQueue(NSOperationQueue.mainQueue(),
+            withHandler:handleAccelerationUpdate)
 //        motionManager.startDeviceMotionUpdatesToQueue(NSOperationQueue.mainQueue(), withHandler:handleMotionUpdate)
          //motionManager.startDeviceMotionUpdatesUsingReferenceFrame(CMAttitudeReferenceFrame.XArbitraryZVertical, toQueue: NSOperationQueue.mainQueue(), withHandler: handleMotionUpdate)
         // .XArbitraryCorrectedZVertical
 //        XArbitraryZVertical
     }
-    func handleAccelerationUpdate(data: CMAccelerometerData!, error: NSError!) {
-        var down:V3D = V3D(0.0,0.0,-1.0)
-        var direction:V3D = V3D(data.acceleration.x, data.acceleration.y, data.acceleration.z)
-        var directionXZ:V3D = V3D(direction.x, 0, direction.z).norm()
-        var directionYZ:V3D = V3D.norm( V3D(0, direction.y, direction.z) )
+    func handleAccelerationUpdate(data: CMAccelerometerData?, error: NSError?) {
+        var dat = data!
+        var erro = error!
+        let down:V3D = V3D(0.0,0.0,-1.0)
+        let direction:V3D = V3D(dat.acceleration.x, dat.acceleration.y, dat.acceleration.z)
+        let directionXZ:V3D = V3D(direction.x, 0, direction.z).norm()
+        let directionYZ:V3D = V3D.norm( V3D(0, direction.y, direction.z) )
         var dot:Double
         var cross:Double
         var angle:Double
@@ -182,7 +185,7 @@ class Input2D { //: NSObject {
         }
         angle = angle + M_PI
         prevInterval = currentIntervalXZ
-        updateIntervalFromAngle(angle:angle, totalIntervals:totalIntervalsXZ, intervalHysteresis:intervalHysteresisXZ, currentInterval:prevInterval, resultInterval:&currentIntervalXZ)
+        updateIntervalFromAngle(angle, totalIntervals:totalIntervalsXZ, intervalHysteresis:intervalHysteresisXZ, currentInterval:prevInterval, resultInterval:&currentIntervalXZ)
         if prevInterval != currentIntervalXZ {
             //println("tilted: \(prevInterval) -> \(currentIntervalXZ) ")
             alertAll(Input2D.EVENT_INTERACT_TILT_XZ, object:currentIntervalXZ)
@@ -195,7 +198,7 @@ class Input2D { //: NSObject {
         }
         angle = angle + M_PI
         prevInterval = currentIntervalYZ
-        updateIntervalFromAngle(angle:angle, totalIntervals:totalIntervalsYZ, intervalHysteresis:intervalHysteresisYZ, currentInterval:prevInterval, resultInterval:&currentIntervalYZ)
+        updateIntervalFromAngle(angle, totalIntervals:totalIntervalsYZ, intervalHysteresis:intervalHysteresisYZ, currentInterval:prevInterval, resultInterval:&currentIntervalYZ)
         if prevInterval != currentIntervalYZ {
             //println("tilted: \(prevInterval) -> \(currentIntervalYZ) ")
             alertAll(Input2D.EVENT_INTERACT_TILT_YZ, object:currentIntervalYZ)
@@ -231,7 +234,7 @@ class Input2D { //: NSObject {
         //        println("Z = \(direction.z)")
     }
     func updateIntervalFromAngle(var angle:Double=0, totalIntervals:Int=0, intervalHysteresis:Double=0,var currentInterval:Int=0, inout resultInterval:Int) { // angle in [0,2pi]
-        var intAngle:Double = (2.0*M_PI)/Double(totalIntervals)
+        let intAngle:Double = (2.0*M_PI)/Double(totalIntervals)
         // center around angle, not at ends
         angle += intAngle*0.5
         angle = Code.angleZeroTwoPi(angle)
@@ -273,30 +276,30 @@ class Input2D { //: NSObject {
     // --------------------------------------------------------------------------------------------------------------------------------------
     
     @objc func handleGestureRecognizerTap(recognizer:UITapGestureRecognizer) {
-        var pt:CGPoint = recognizer.locationInView(recognizer.view)
-        var point:V2D = V2D(pt)
+        let pt:CGPoint = recognizer.locationInView(recognizer.view)
+        let point:V2D = V2D(pt)
         alertAll(Input2D.EVENT_INTERACT_TAP, object:point)
     }
     @objc func handleGestureRecognizerDouble(recognizer:UITapGestureRecognizer) {
-        var pt:CGPoint = recognizer.locationInView(recognizer.view)
-        var point:V2D = V2D(pt)
+        let pt:CGPoint = recognizer.locationInView(recognizer.view)
+        let point:V2D = V2D(pt)
         alertAll(Input2D.EVENT_INTERACT_DOUBLE_TAP, object:point)
     }
     @objc func handleGestureRecognizerPress(recognizer:UILongPressGestureRecognizer) {
         if recognizer.state == UIGestureRecognizerState.Ended {
-            var pt:CGPoint = recognizer.locationInView(recognizer.view)
-            var point:V2D = V2D(pt)
+            let pt:CGPoint = recognizer.locationInView(recognizer.view)
+            let point:V2D = V2D(pt)
             alertAll(Input2D.EVENT_INTERACT_PRESS, object:point)
         }
     }
     @objc func handleGestureRecognizerSwipe(recognizer:UISwipeDirectionGestureRecognizer) {
         var view:UIView! = recognizer.view
-        var direction:CGPoint = recognizer.swipeDirection
-        var location:CGPoint = recognizer.swipeLocation
+        let direction:CGPoint = recognizer.swipeDirection
+        let location:CGPoint = recognizer.swipeLocation
         
-        var loc:V2D = V2D(location)
-        var dir:V2D = V2D(direction)
-        var list:[V2D] = [loc, dir]
+        let loc:V2D = V2D(location)
+        let dir:V2D = V2D(direction)
+        let list:[V2D] = [loc, dir]
         alertAll(Input2D.EVENT_INTERACT_SWIPE, object:list)
     }
     // --------------------------------------------------------------------------------------------------------------------------------------

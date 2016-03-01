@@ -82,13 +82,13 @@ if (true) {
     var isChar:Bool = self is Char2D
     if isChar {
         var c:Char2D! = self as! Char2D
-        println("body below: \(body) | \(isSame) .... \(frame)")
+        print("body below: \(body) | \(isSame) .... \(frame)")
         
         
         
         physics.enumerateBodiesInRect(frame, usingBlock: { (body:SKPhysicsBody!, stop:UnsafeMutablePointer<ObjCBool>) -> Void in
             if body != nil && body.node != nil{
-                println("       - body: \(body.node?.name) : \(body.node?.frame) ")
+                print("       - body: \(body.node?.name) : \(body.node?.frame) ")
             }
         })
         
@@ -118,10 +118,10 @@ if (true) {
     }
     
     internal func handleLanded() {
-        println(">>>LAND")
+        print(">>>LAND")
     }
     internal func handleAirborne() {
-        println(">>>AIR")
+        print(">>>AIR")
     }
     
     override func handleCollisionStart(gravity:V2D!, _ normal:V2D!, _ obj:Obj2D!) {
@@ -174,11 +174,11 @@ if (true) {
         var center:CGPoint
         center = CGPointMake( CGFloat(size.x*0.5), CGFloat(size.y*0.5) )
         if circular {
-            println("PHYSICS CIRCULAR")
-            var avg:CGFloat = CGFloat((size.x+size.y)*0.5)
+            print("PHYSICS CIRCULAR")
+            let avg:CGFloat = CGFloat((size.x+size.y)*0.5)
             body = SKPhysicsBody(circleOfRadius:avg, center:center)
         } else {
-            println("PHYSICS RECTANGULAR")
+            print("PHYSICS RECTANGULAR")
             body = SKPhysicsBody(rectangleOfSize:CGSizeMake(CGFloat(size.x),CGFloat(size.y)), center:center)
         }
         body.contactTestBitMask = Game2D.PHYSICS_CONTACT_BIT_MASK_ANY
@@ -198,7 +198,7 @@ if (true) {
         return displayNodeFromDisplay()
     }
     func attachPhysicsNode(node:SKNode) {
-        println("physic node: \(node)")
+        print("physic node: \(node)")
         physics = node
         if node is SKObj2D {
             var node2D:SKObj2D = node as! SKObj2D
@@ -210,7 +210,7 @@ if (true) {
 //        println("update from display: \(pos) \(display.position)")
         var body:SKPhysicsBody! = physics.physicsBody
         if rotates {
-            var angle:Double = Double(physics.zRotation)
+            let angle:Double = Double(physics.zRotation)
             dir.set(1.0,0.0)
             dir.rotate(angle)
         }

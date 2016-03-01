@@ -92,21 +92,21 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         var dyns:[Obj2D]
         var obj:Obj2D
         var objs:[Obj2D]
-        var cam:Cam2D = cams[selectedCam]
-        var gravity:V2D = getGravity()
-        var physics:SKPhysicsWorld = scene.physicsWorld
-        var dt:Double = 1.0/60.0
+        let cam:Cam2D = cams[selectedCam]
+        let gravity:V2D = getGravity()
+        let physics:SKPhysicsWorld = scene.physicsWorld
+        let dt:Double = 1.0/60.0
         // move camera toward object
         cam.target = selectedCharacter
         cam.process(currentTime, dt, physics, scene)
         //println(" \(cam.pos.copy().flip().toCGPoint()) ")
         //println(" \(cam.pos) ")
-        var scale:Double = 1.0 //0.5
+        let scale:Double = 1.0 //0.5
         cam.scale.x = scale
         cam.scale.y = scale
         container.xScale = CGFloat(cam.scale.x)
         container.yScale = CGFloat(cam.scale.y)
-        var screenSize:V2D = V2D(view.frame.size)
+        let screenSize:V2D = V2D(view.frame.size)
         var screenCenter:V2D = screenSize.copy().scale(0.5)
         var target:V2D = V2D.add(cam.pos, selectedCharacter.size.copy().scale(0.5).scale(cam.scale.x, cam.scale.y) ) // cam.pos // V2D.add(cam.pos, cam.target)
         target.scale(cam.scale.x, cam.scale.y)
@@ -155,8 +155,8 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
 
     }
     func handleEventTiltXZ(notification:NSNotification) {
-        var interval:Int = notification.object as! Int
-        println("titled XZ: \(interval)")
+        let interval:Int = notification.object as! Int
+        print("titled XZ: \(interval)")
         if selectedCharacter != nil {
             if 8 <= interval && interval <= 10 {
                 selectedCharacter.run()
@@ -178,13 +178,13 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
     func handleEventTap(notification:NSNotification) {
         var point:V2D! = notification.object as! V2D
         if selectedCharacter != nil {
-            println("tapped: \(point)")
-            println("cam: \(cams[0].pos) - \(cams[0].scale)")
-            println("scene: \(scene.size) ")
+            print("tapped: \(point)")
+            print("cam: \(cams[0].pos) - \(cams[0].scale)")
+            print("scene: \(scene.size) ")
             // translate point to world coordinates:
-            var objDepth:Double = 0 // -1.0 //Game2D.Z_INDEX_BACKGROUND_DEFAULT + 1.0
-            var worldPoint:V2D = screenPointToWorldPoint(point, objDepth)
-            println("pointA: \(worldPoint)")
+            let objDepth:Double = 0 // -1.0 //Game2D.Z_INDEX_BACKGROUND_DEFAULT + 1.0
+            let worldPoint:V2D = screenPointToWorldPoint(point, objDepth)
+            print("pointA: \(worldPoint)")
             
             var pos:V2D!
             var cell:Cell2D!
@@ -198,7 +198,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
             var blockBG:Block2D!
             var rows:Int = grid.rows
             var cols:Int = grid.cols
-            var cellSize:V2D = grid.size
+            let cellSize:V2D = grid.size
             
             var fileRelative:String!
             var fileBundle:String!
@@ -207,14 +207,14 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
             fileRelative = "data/images/cloud0.png"
             fileBundle = NSBundle.mainBundle().pathForResource(fileRelative, ofType:nil)
             image = UIImage(contentsOfFile: fileBundle)
-            var textureAmbience0:SKTexture! = SKTexture(image:image)
+            let textureAmbience0:SKTexture! = SKTexture(image:image)
             
             var i:Int, index:Int = 0
             var locations:[V2D] = [ worldPoint ]
             cellSize.set(25.0,25.0)
             index = 0
             for i=0; i<locations.count; ++i {
-                var loc:V2D = locations[i]
+                let loc:V2D = locations[i]
                 blockBG = Block2D()
                 blockBG.pos.set(loc.x,loc.y )
                 blockBG.size.copy(cellSize)
@@ -229,20 +229,20 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
                 cell = grid.getCell(pos.x,pos.y)
                 cell.addBackground(blockBG)
                 blockBG.depth = objDepth;
-                println("BLOCK: \(blockBG.display)")
+                print("BLOCK: \(blockBG.display)")
             }
             
             point = worldPoint.copy()//screenPointToDisplayPoint(point)
-            println("pointB: \(point)")
+            print("pointB: \(point)")
             
-            var dP:V2D = V2D(selectedCharacter.display.position)
-            var dS:V2D = selectedCharacter.size
-            var dC:V2D = dP.copy().add(dS)
+            let dP:V2D = V2D(selectedCharacter.display.position)
+            let dS:V2D = selectedCharacter.size
+            let dC:V2D = dP.copy().add(dS)
             
-            var center:V2D = dC //selectedCharacter.center
-            var gravity:V2D = getGravity()
-            var centerToPoint:V2D = V2D.sub(point, point, center)
-            var dir:V2D = centerToPoint.norm()
+            let center:V2D = dC //selectedCharacter.center
+            let gravity:V2D = getGravity()
+            let centerToPoint:V2D = V2D.sub(point, point, center)
+            let dir:V2D = centerToPoint.norm()
             selectedCharacter.aim(gravity, dir)
         }
     }
@@ -250,9 +250,9 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         var point:V2D! = notification.object as! V2D
         if selectedCharacter != nil {
             point = screenPointToWorldPoint(point)
-            println("double tapped: \(point)")
-            var gravity:V2D = getGravity()
-            var dir:V2D = gravity.copy().flip().norm()
+            print("double tapped: \(point)")
+            let gravity:V2D = getGravity()
+            let dir:V2D = gravity.copy().flip().norm()
             
 //            if (true) {
 //                var height:Double = 10.0
@@ -288,40 +288,40 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
     }
     func handleEventSwipe(notification:NSNotification) {
         var list:[V2D] = notification.object as! [V2D]
-        var location:V2D! = list[0]
-        var direction:V2D! = list[1]
+        let location:V2D! = list[0]
+        let direction:V2D! = list[1]
         
-        var view:UIView = self.viewUI
+        let view:UIView = self.viewUI
         
-        var availableWidth:Double = Double(view.frame.size.width)
+        let availableWidth:Double = Double(view.frame.size.width)
         var availableHeight:Double = Double(view.frame.size.height)
         if location.x < availableWidth*0.5 {
-            println("left operation")
+            print("left operation")
         } else {
-            println("right operation")
+            print("right operation")
         }
         
-        var directionLeft:V2D = V2D(-1.0, 0.0)
-        var directionRight:V2D = V2D(1.0, 0.0)
-        var directionUp:V2D = V2D(0.0, -1.0)
-        var directionDown:V2D = V2D(0.0, 1.0)
+        let directionLeft:V2D = V2D(-1.0, 0.0)
+        let directionRight:V2D = V2D(1.0, 0.0)
+        let directionUp:V2D = V2D(0.0, -1.0)
+        let directionDown:V2D = V2D(0.0, 1.0)
         
-        var operationLeft:(Void)->(Void) = { println("op left") }
-        var operationRight:(Void)->(Void) = { println("op right") }
-        var operationUp:(Void)->(Void) = { println("op up") }
-        var operationDown:(Void)->(Void) = { println("op down") }
+        let operationLeft:(Void)->(Void) = { print("op left") }
+        let operationRight:(Void)->(Void) = { print("op right") }
+        let operationUp:(Void)->(Void) = { print("op up") }
+        let operationDown:(Void)->(Void) = { print("op down") }
         
         var directions:[(V2D, (Void)->(Void))] = [(directionLeft,operationLeft), (directionRight,operationRight), (directionUp,operationUp), (directionDown,operationDown)]
         
         var i:Int
-        var len:Int = directions.count
+        let len:Int = directions.count
         var bestDot:Double = -2.0
         var dot:Double = 0.0
         var bestOperation:((Void)->(Void))! = nil
         for i=0; i<len; ++i {
-            var tup:(V2D, (Void)->(Void)) = directions[i]
-            var dir:V2D = tup.0
-            var opt:(Void)->(Void) = tup.1
+            let tup:(V2D, (Void)->(Void)) = directions[i]
+            let dir:V2D = tup.0
+            let opt:(Void)->(Void) = tup.1
             dot = V2D.dot(dir, direction)
             if dot > bestDot { // dot closest to 1.0, angle closest to 0.0
                 bestDot = dot
@@ -337,7 +337,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
     }
     
     func screenPointToWorldPoint (_ inPoint:V2D! = nil, _ depth:Double = 0.0) -> V2D {
-        var screenPoint:V2D = inPoint.copy() .sub(Double(scene.size.width*0.5),Double(scene.size.height*0.5)) .flipY()
+        let screenPoint:V2D = inPoint.copy() .sub(Double(scene.size.width*0.5),Double(scene.size.height*0.5)) .flipY()
         return Cam2D.displayPointToWorldPoint(cams[selectedCam], depth, screenPoint)
     }
     
@@ -379,7 +379,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         }
     }
     func getGravity() -> V2D {
-        var gravity:V2D = V2D(scene.physicsWorld.gravity)
+        let gravity:V2D = V2D(scene.physicsWorld.gravity)
         return gravity
     }
     func defaultStuff() -> Void {
@@ -389,7 +389,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         
         cams.removeAll(keepCapacity:false)
         cam = Cam2D()
-        self.addCam(cam:cam)
+        self.addCam(cam)
         
         grid = Grid2D(width:5, height:3, sizeX:100.0, sizeY:100.0)
         
@@ -417,7 +417,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         var dict:NSMutableDictionary!
         dict = NSMutableDictionary()
         dict[NSString(string:"tankmen")] = image
-        var literal = dict.dictionaryWithValuesForKeys(dict.allKeys)
+        var literal = dict.dictionaryWithValuesForKeys( dict.allKeys as! [String] )
         // added line to stop crashing
         myImage = image
         //textureAtlas = SKTextureAtlas(dictionary: literal)
@@ -434,7 +434,7 @@ class Game2D : NSObject, SKPhysicsContactDelegate {
         //textureStill0 = SKTexture(rect:rect, inTexture:textureAll)
         //textureStill0 = textureAtlas.textureNamed("tankmen")
         textureStill0 = SKTexture(rect:rect, inTexture: textureAtlas.textureNamed("tankmen") )
-        println("textureStill0: \(textureStill0) ")
+        print("textureStill0: \(textureStill0) ")
         
         // physics
         var pos:V2D!
@@ -475,8 +475,8 @@ container.addChild(node)
         char.dir.set(1.0, 0.0)
         
         var cell:Cell2D!
-        println("char: \(char)")
-        println("grid: \(grid)")
+        print("char: \(char)")
+        print("grid: \(grid)")
         pos = char.pos
         cell = grid.getCell(pos.x, pos.y)
         cell.addDynamic(char)
@@ -556,7 +556,7 @@ container.addChild(node)
             cell = grid.getCell(pos.x,pos.y)
             cell.addBackground(blockBG)
             blockBG.depth = -1.0;//-1.0//Game2D.Z_INDEX_BACKGROUND_DEFAULT + 1.0
-            println("BLOCK: \(blockBG.display)")
+            print("BLOCK: \(blockBG.display)")
         }
 
         // obstacles
@@ -592,7 +592,7 @@ container.addChild(node)
             cell = grid.getCell(pos.x,pos.y)
             cell.addDynamic(phys)
             phys.depth = 0.0;//-1.0//Game2D.Z_INDEX_BACKGROUND_DEFAULT + 1.0
-            println("OBSTACLE: \(phys.display)")
+            print("OBSTACLE: \(phys.display)")
         }
 /*
         var char:Char2D!
@@ -721,9 +721,9 @@ container.addChild(node)
         //println("contact Begin: \(contact) ")
         var objA:Obj2D!
         var objB:Obj2D!
-        var normal:CGVector = contact.contactNormal // from A to B
-        var bodyA:SKPhysicsBody = contact.bodyA
-        var bodyB:SKPhysicsBody = contact.bodyB
+        let normal:CGVector = contact.contactNormal // from A to B
+        let bodyA:SKPhysicsBody = contact.bodyA
+        let bodyB:SKPhysicsBody = contact.bodyB
         /*
         var point:CGPoint = contact.contactPoint
         println("C: \(point) \(normal.dx), \(normal.dy)")
@@ -734,9 +734,9 @@ container.addChild(node)
         println("A: \(posA) \(CtoA)")
         println("B: \(posB) \(CtoB)")
         */
-        var norm:V2D = V2D( Double(normal.dx), Double(normal.dy) )
+        let norm:V2D = V2D( Double(normal.dx), Double(normal.dy) )
         norm.norm()
-        var grav:V2D = getGravity()
+        let grav:V2D = getGravity()
         grav.norm()
         
         if let a = bodyA.node as? SKObj2D {
@@ -757,13 +757,13 @@ container.addChild(node)
     @objc func didEndContact(contact:SKPhysicsContact) {
         var objA:Obj2D!
         var objB:Obj2D!
-        var normal:CGVector = contact.contactNormal // from B to A
-        var bodyA:SKPhysicsBody = contact.bodyA
-        var bodyB:SKPhysicsBody = contact.bodyB
-        var norm:V2D = V2D( Double(normal.dx), Double(normal.dy) )
+        let normal:CGVector = contact.contactNormal // from B to A
+        let bodyA:SKPhysicsBody = contact.bodyA
+        let bodyB:SKPhysicsBody = contact.bodyB
+        let norm:V2D = V2D( Double(normal.dx), Double(normal.dy) )
         norm.norm()
-        var gravity:CGVector = scene.physicsWorld.gravity
-        var grav:V2D = V2D( Double(gravity.dx), Double(gravity.dy) )
+        let gravity:CGVector = scene.physicsWorld.gravity
+        let grav:V2D = V2D( Double(gravity.dx), Double(gravity.dy) )
         grav.norm()
         //println("contact End: \(contact) ")
         if let a = bodyA.node as? SKObj2D {

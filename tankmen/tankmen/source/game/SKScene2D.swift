@@ -37,17 +37,17 @@ class SKScene2D : SKScene {
     }
     override func didSimulatePhysics() {
         super.didSimulatePhysics()
-        var time:NSTimeInterval = NSDate.timeIntervalSinceReferenceDate()
+        let time:NSTimeInterval = NSDate.timeIntervalSinceReferenceDate()
         alertAll(SKScene2D.EVENT_SIMULATE_FINISH, object:time)
     }
     override func didFinishUpdate() {
         super.didFinishUpdate()
-        var time:NSTimeInterval = NSDate.timeIntervalSinceReferenceDate()
+        let time:NSTimeInterval = NSDate.timeIntervalSinceReferenceDate()
         alertAll(SKScene2D.EVENT_UPDATE_FINISH, object:time)
     }
     // ----------------------------------------------------------------------------------------------------------------------------------------
     func alertAll(name:String, object:AnyObject!=nil) {
-        var notification:NSNotification = NSNotification(name:name, object:object)
+        let notification:NSNotification = NSNotification(name:name, object:object)
         dispatch.postNotification(notification)
     }
     //

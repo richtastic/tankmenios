@@ -7,7 +7,7 @@ import UIKit
 class Code {
     static func angleZeroTwoPi(angle:Double) -> Double { // [-inf,inf] => [0,2pi]
         var ang:Double = angle
-        var pi2:Double = 2.0*M_PI
+        let pi2:Double = 2.0*M_PI
         while ang >= pi2 {
             ang -= pi2
         }
@@ -26,15 +26,15 @@ class Code {
         return abs(a) % abs(b)
     }
     static func printListOfAllFonts() {
-        var families:[String] = UIFont.familyNames() as! [String]
+        let families:[String] = UIFont.familyNames() 
         var names:[String]
         var family:String
         var name:String
         for family in families {
-            println("family: \(family)")
-            names = UIFont.fontNamesForFamilyName(family) as! [String]
+            print("family: \(family)")
+            names = UIFont.fontNamesForFamilyName(family) 
             for name in names {
-                println("       \(name)")
+                print("       \(name)")
             }
         }
     }

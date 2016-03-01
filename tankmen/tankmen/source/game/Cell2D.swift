@@ -16,7 +16,7 @@ class Cell2D : Block2D{
         // dynamic?
     override var description:String {
         get {
-            var end:V2D = self.end
+            let end:V2D = self.end
             return "[Cell2D X: \(pos.x)->\(end.x), Y: \(pos.y)->\(end.y)]"
         }
     }
